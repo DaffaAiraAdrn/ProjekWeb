@@ -1,0 +1,157 @@
+body{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    background: linear-gradient(135deg, #150B22, #1C0D2A);
+    color: #F5F3FF;
+    padding-top: 70px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+body.page-loaded {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.contact-section{
+    background: linear-gradient(
+    135deg,
+    #2b0057 0%,   
+    #4a0149 50%,  
+    #5b001f 100%  
+    );
+}
+
+
+.main-content {
+    min-height: 80vh;
+    
+    background: linear-gradient(
+    135deg,
+    #2b0057 0%,   
+    #4a0149 50%,  
+    #5b001f 100%  
+    );
+
+    padding: 60px 0;
+}
+
+
+
+
+.intro-content{
+    background: linear-gradient(
+    135deg,
+    #2b0057 0%,   
+    #4a0149 50%,  
+    #5b001f 100%  
+    );
+
+}
+
+.footer-section{
+    background: linear-gradient(135deg, #150B22, #1C0D2A);
+}
+footer a {
+    text-decoration: none !important;
+}
+
+footer a:hover {
+    color: #C7A6FF !important;
+}
+
+
+.feature-card {
+    transition: 0.3s ease;
+}
+.feature-card:hover {
+    transform: translateY(-5px);
+    background-color: #f8f9fa;
+}
+
+.carousel-item img {
+    max-height: 500px;
+    object-fit: contain;
+    border-radius: 20px;
+}
+
+.carousel {
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    overflow: hidden; 
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+
+.portfolio-card img {
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+        }
+
+.portfolio-card {
+    transition: transform .2s ease, box-shadow .2s ease;
+    cursor: pointer;
+}
+.portfolio-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 25px rgba(255,255,255,0.15);
+}
+.tab-btn.active {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+
+footer {
+    padding: 60px 0;
+}
+
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.timeline {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    border-left: 3px solid #4a0149;
+}
+
+.timeline li {
+    position: relative;
+    padding: 15px 20px;
+    margin-left: 20px;
+}
+
+.timeline li::before {
+    content: "";
+    width: 14px;
+    height: 14px;
+    background: #4a0149;
+    border-radius: 50%;
+    position: absolute;
+    left: -28px;
+    top: 20px;
+}
+
+.timeline .year {
+    font-weight: bold;
+    color: #4a0149;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.progress {
+    height: 10px;
+}
+
+.progress-bar {
+    background-color: #4a0149;
+    font-size: 0.75rem;
+}
+
+
+
