@@ -13,32 +13,11 @@ jobs:
       - name: 🚚 Get latest code
         uses: actions/checkout@v4
 
-      - name: 🛠️ Install PHP dependencies
-        run: composer install --no-dev --optimize-autoloader
-
-      - name: 📝 Create .env file
-        run: |
-          cp .env.example .env
-          sed -i 's/APP_ENV=local/APP_ENV=production/g' .env
-          sed -i 's/APP_DEBUG=true/APP_DEBUG=false/g' .env
-          sed -i 's|APP_KEY=|APP_KEY=base64:DpobIcHHJUSYU1CIYWa1+szYgdNdA0Ep/uUL/F5qaxo=|g' .env
-
-      - name: 📦 Zip project
-        run: zip -r build.zip . -x ".git*" ".github*"
-
-      - name: 📂 Upload ZIP and Deploy Script
+      - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: ./df137/
-          local-dir: ./
-          # Only upload these two files
-          exclude: |
-            **/*
-            !build.zip
-            !deploy.php
-
-      - name: 🚀 Extract ZIP on Server
-        run: curl -s https://df137.ifportofolio.com/deploy.php
+          dangerous-clean-slate: true
