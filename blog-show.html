@@ -43,6 +43,119 @@
                 <p class="text-secondary mb-5">Published on: 12 May 2026</p>
                 
                 <div class="report-content lh-lg fs-5">
+                    <h2 class="fw-bold mt-5 mb-4 border-bottom pb-2">Penjelasan Komponen Laravel</h2>
+                    <p>Berdasarkan arsitektur Model-View-Controller (MVC) dan sistem inti yang diusung oleh kerangka kerja Laravel, pengamatan difokuskan langsung pada komponen-komponen utama aplikasi. Penjelasan mengenai fungsi masing-masing komponen arsitektur tersebut diuraikan sebagai berikut:</p>
+                    <div class="accordion mb-5" id="komponenAccordion" data-bs-theme="dark">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingModels">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseModels" aria-expanded="false" aria-controls="collapseModels">
+                                    <strong>Komponen Models</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseModels" class="accordion-collapse collapse" aria-labelledby="headingModels" data-bs-parent="#komponenAccordion">
+                                <div class="accordion-body">
+                                    Terletak pada direktori <code>app/Models</code>. Komponen ini memiliki fungsi krusial dalam lapisan data, yang mencakup: a) merepresentasikan struktur entitas data aplikasi, b) menangani aturan logika bisnis terkait data tersebut, serta c) mengelola interaksi langsung dengan sistem basis data menggunakan Eloquent Object-Relational Mapping (ORM) untuk memanipulasi data tanpa memerlukan penulisan kueri SQL secara manual.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingViews">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseViews" aria-expanded="false" aria-controls="collapseViews">
+                                    <strong>Komponen Views</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseViews" class="accordion-collapse collapse" aria-labelledby="headingViews" data-bs-parent="#komponenAccordion">
+                                <div class="accordion-body">
+                                    Ditempatkan pada direktori <code>resources/views</code>. Komponen ini bertindak sebagai lapisan presentasi (presentation layer). Fungsi utama dari komponen ini meliputi: a) memisahkan logika pemrosesan aplikasi dari desain antarmuka pengguna, b) menyusun struktur visual menggunakan Blade Templating Engine, serta c) merender data yang dikirimkan oleh sistem menjadi format HTML yang siap ditampilkan pada browser.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingControllers">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseControllers" aria-expanded="false" aria-controls="collapseControllers">
+                                    <strong>Komponen Controllers</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseControllers" class="accordion-collapse collapse" aria-labelledby="headingControllers" data-bs-parent="#komponenAccordion">
+                                <div class="accordion-body">
+                                    Berlokasi pada direktori <code>app/Http/Controllers</code>. Komponen ini berfungsi sebagai pusat kendali aliran program dengan rincian tugas: a) menerima dan mengevaluasi permintaan HTTP yang masuk, b) menginstruksikan komponen Models untuk melakukan operasi pengambilan atau manipulasi data, serta c) meneruskan hasil pemrosesan data tersebut ke komponen Views yang relevan untuk dirender.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingRoutes">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRoutes" aria-expanded="false" aria-controls="collapseRoutes">
+                                    <strong>Komponen Routes</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseRoutes" class="accordion-collapse collapse" aria-labelledby="headingRoutes" data-bs-parent="#komponenAccordion">
+                                <div class="accordion-body">
+                                    Berada pada direktori <code>routes</code>, memegang peranan sebagai sistem pemetaan (router). Komponen ini difungsikan secara spesifik untuk: a) memetakan setiap alamat URL yang diakses menuju logika pemrosesan yang tepat, b) mengarahkan permintaan tersebut ke metode di dalam kelas Controllers, serta c) mendaftarkan lapisan penyaring HTTP (middleware).
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingProviders">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProviders" aria-expanded="false" aria-controls="collapseProviders">
+                                    <strong>Komponen Providers</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseProviders" class="accordion-collapse collapse" aria-labelledby="headingProviders" data-bs-parent="#komponenAccordion">
+                                <div class="accordion-body">
+                                    Terletak pada direktori <code>app/Providers</code>. Beroperasi sebagai pusat registrasi layanan pada fase awal pemuatan aplikasi (bootstrapping). Tugas spesifik: a) melakukan registrasi pengikatan dependensi, b) mendaftarkan pendengar peristiwa maupun layanan eksternal, serta c) memuat konfigurasi fundamental.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingDatabase">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDatabase" aria-expanded="false" aria-controls="collapseDatabase">
+                                    <strong>Komponen Database (Migrations dan Seeders)</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseDatabase" class="accordion-collapse collapse" aria-labelledby="headingDatabase" data-bs-parent="#komponenAccordion">
+                                <div class="accordion-body">
+                                    Pengelolaan dirincikan menjadi: a) Migrations yang bertindak sebagai sistem kontrol versi untuk skema basis data, b) Seeders yang digunakan untuk mengeksekusi pengisian tabel dengan data awal secara otomatis, serta c) Factories yang difungsikan untuk menghasilkan kumpulan data tiruan.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingMiddleware">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMiddleware" aria-expanded="false" aria-controls="collapseMiddleware">
+                                    <strong>Komponen Middleware</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseMiddleware" class="accordion-collapse collapse" aria-labelledby="headingMiddleware" data-bs-parent="#komponenAccordion">
+                                <div class="accordion-body">
+                                    Diletakkan di antara Routes dan Controllers. Difungsikan untuk: a) mencegat dan mengevaluasi setiap permintaan HTTP yang masuk, b) melakukan tahapan verifikasi seperti pengecekan status autentikasi pengguna, serta c) memodifikasi data permintaan atau menolak akses langsung jika permintaan tidak memenuhi kriteria keamanan.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingServiceContainer">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseServiceContainer" aria-expanded="false" aria-controls="collapseServiceContainer">
+                                    <strong>Komponen Service Container</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseServiceContainer" class="accordion-collapse collapse" aria-labelledby="headingServiceContainer" data-bs-parent="#komponenAccordion">
+                                <div class="accordion-body">
+                                    Komponen ini merupakan elemen paling esensial dalam ekosistem Laravel yang bertugas untuk: a) mengelola siklus hidup serta instansiasi seluruh kelas, b) melaksanakan injeksi dependensi, serta c) memfasilitasi penyatuan antarmuka guna menghasilkan kode aplikasi yang sangat modular.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingArtisan">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseArtisan" aria-expanded="false" aria-controls="collapseArtisan">
+                                    <strong>Komponen Artisan Console</strong>
+                                </button>
+                            </h2>
+                            <div id="collapseArtisan" class="accordion-collapse collapse" aria-labelledby="headingArtisan" data-bs-parent="#komponenAccordion">
+                                <div class="accordion-body">
+                                    Komponen berbasis antarmuka baris perintah ini difungsikan untuk: a) mengotomatisasi pembuatan kerangka kode, b) mengeksekusi instruksi pengelolaan Database seperti menjalankan migrations maupun seeders, serta c) menyediakan fasilitas untuk membersihkan cache sistem dan mengelola penjadwalan tugas di latar belakang.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <h2 class="fw-bold mt-5 mb-4 border-bottom pb-2">Pendahuluan</h2>
                     
                     <h4 class="fw-bold mt-4">Latar Belakang</h4>
@@ -97,19 +210,7 @@
                         </li>
                     </ol>
 
-                    <h4 class="fw-bold mt-4">Penjelasan Komponen Laravel</h4>
-                    <p>Berdasarkan arsitektur Model-View-Controller (MVC) dan sistem inti yang diusung oleh kerangka kerja Laravel, pengamatan difokuskan langsung pada komponen-komponen utama aplikasi. Penjelasan mengenai fungsi masing-masing komponen arsitektur tersebut diuraikan sebagai berikut:</p>
-                    <ul>
-                        <li><strong>Komponen Models:</strong> Terletak pada direktori app/Models. Komponen ini memiliki fungsi krusial dalam lapisan data, yang mencakup: a) merepresentasikan struktur entitas data aplikasi, b) menangani aturan logika bisnis terkait data tersebut, serta c) mengelola interaksi langsung dengan sistem basis data menggunakan Eloquent Object-Relational Mapping (ORM) untuk memanipulasi data tanpa memerlukan penulisan kueri SQL secara manual.</li>
-                        <li><strong>Komponen Views:</strong> Ditempatkan pada direktori resources/views. Komponen ini bertindak sebagai lapisan presentasi (presentation layer). Fungsi utama dari komponen ini meliputi: a) memisahkan logika pemrosesan aplikasi dari desain antarmuka pengguna, b) menyusun struktur visual menggunakan Blade Templating Engine, serta c) merender data yang dikirimkan oleh sistem menjadi format HTML yang siap ditampilkan pada browser.</li>
-                        <li><strong>Komponen Controllers:</strong> Berlokasi pada direktori app/Http/Controllers. Komponen ini berfungsi sebagai pusat kendali aliran program dengan rincian tugas: a) menerima dan mengevaluasi permintaan HTTP yang masuk, b) menginstruksikan komponen Models untuk melakukan operasi pengambilan atau manipulasi data, serta c) meneruskan hasil pemrosesan data tersebut ke komponen Views yang relevan untuk dirender.</li>
-                        <li><strong>Komponen Routes:</strong> Berada pada direktori routes, memegang peranan sebagai sistem pemetaan (router). Komponen ini difungsikan secara spesifik untuk: a) memetakan setiap alamat URL yang diakses menuju logika pemrosesan yang tepat, b) mengarahkan permintaan tersebut ke metode di dalam kelas Controllers, serta c) mendaftarkan lapisan penyaring HTTP (middleware).</li>
-                        <li><strong>Komponen Providers:</strong> Terletak pada direktori app/Providers. Beroperasi sebagai pusat registrasi layanan pada fase awal pemuatan aplikasi (bootstrapping). Tugas spesifik: a) melakukan registrasi pengikatan dependensi, b) mendaftarkan pendengar peristiwa maupun layanan eksternal, serta c) memuat konfigurasi fundamental.</li>
-                        <li><strong>Komponen Database (Migrations dan Seeders):</strong> Pengelolaan dirincikan menjadi: a) Migrations yang bertindak sebagai sistem kontrol versi untuk skema basis data, b) Seeders yang digunakan untuk mengeksekusi pengisian tabel dengan data awal secara otomatis, serta c) Factories yang difungsikan untuk menghasilkan kumpulan data tiruan.</li>
-                        <li><strong>Komponen Middleware:</strong> Diletakkan di antara Routes dan Controllers. Difungsikan untuk: a) mencegat dan mengevaluasi setiap permintaan HTTP yang masuk, b) melakukan tahapan verifikasi seperti pengecekan status autentikasi pengguna, serta c) memodifikasi data permintaan atau menolak akses langsung jika permintaan tidak memenuhi kriteria keamanan.</li>
-                        <li><strong>Komponen Service Container:</strong> Komponen ini merupakan elemen paling esensial dalam ekosistem Laravel yang bertugas untuk: a) mengelola siklus hidup serta instansiasi seluruh kelas, b) melaksanakan injeksi dependensi, serta c) memfasilitasi penyatuan antarmuka guna menghasilkan kode aplikasi yang sangat modular.</li>
-                        <li><strong>Komponen Artisan Console:</strong> Komponen berbasis antarmuka baris perintah ini difungsikan untuk: a) mengotomatisasi pembuatan kerangka kode, b) mengeksekusi instruksi pengelolaan Database seperti menjalankan migrations maupun seeders, serta c) menyediakan fasilitas untuk membersihkan cache sistem dan mengelola penjadwalan tugas di latar belakang.</li>
-                    </ul>
+
 
                     <h2 class="fw-bold mt-5 mb-4 border-bottom pb-2">Kesimpulan</h2>
                     <p>Berdasarkan praktikum yang telah dilakukan, dapat disimpulkan bahwa tahapan awal penggunaan framework Laravel telah berhasil dilaksanakan. Persiapan perangkat lunak pendukung telah dilakukan untuk memastikan lingkungan pengembangan siap digunakan. Prosedur pembuatan proyek baru telah berhasil diselesaikan sehingga struktur dasar aplikasi dapat terbentuk dengan benar. Selain itu, pengujian pada sistem routing telah berhasil dilakukan untuk menampilkan teks "Hello World" pada browser melalui alamat rute yang telah dikonfigurasi. Keberhasilan ini menunjukkan bahwa dasar-dasar penggunaan Laravel telah dipahami dan sistem telah siap untuk dikembangkan ke tahap selanjutnya.</p>
