@@ -39,13 +39,80 @@
         <div class="row justify-content-center">
             <div class="col-12 col-lg-8">
                 <a href="blog.html" class="btn btn-outline-light mb-4"><i class="bi bi-arrow-left me-2"></i>Back to Reports</a>
-                <h1 class="display-4 fw-bold mb-3">Implementasi CNN untuk Klasifikasi Gambar</h1>
+                <h1 class="display-4 fw-bold mb-3">Instalasi dan Konfigurasi Framework Laravel</h1>
                 <p class="text-secondary mb-5">Published on: 12 May 2026</p>
                 
                 <div class="report-content lh-lg fs-5">
-                    <p>Pada laporan ini, kita menggunakan PyTorch untuk membangun model Convolutional Neural Network (CNN). Model ini dilatih menggunakan dataset yang terdiri dari berbagai kelas gambar. Hasil evaluasi menunjukkan akurasi sebesar 95% pada data uji.</p>
-                    <p>Langkah-langkah yang dilakukan antara lain pra-pemrosesan data, definisi arsitektur model, pelatihan, dan pengujian. Seluruh proses dilakukan di Google Colab. Kode sumber dapat dilihat pada repository GitHub saya.</p>
-                    <p>CNN terbukti sangat tangguh dalam menangani data visual dan mengekstraksi fitur secara hierarkis, menjadikannya pilihan utama untuk tugas computer vision modern.</p>
+                    <h2 class="fw-bold mt-5 mb-4 border-bottom pb-2">Pendahuluan</h2>
+                    
+                    <h4 class="fw-bold mt-4">Latar Belakang</h4>
+                    <p>Dalam pengembangan aplikasi web modern berbasis bahasa pemrograman PHP, pemanfaatan kerangka kerja (framework) menjadi suatu kebutuhan mendesak untuk meningkatkan efisiensi waktu dan menjaga keteraturan struktur kode program. Laravel merupakan salah satu framework PHP yang banyak digunakan karena mengusung pola arsitektur Model-View-Controller (MVC), yang berfungsi secara sistematis memisahkan antara logika bisnis, pengelolaan basis data, dan antarmuka pengguna. Penggunaan kerangka kerja ini memfasilitasi proses pengembangan melalui berbagai fitur bawaan yang komprehensif, seperti sistem pemetaan URL (routing) yang dinamis, pengelolaan basis data terstruktur menggunakan Eloquent ORM, serta perenderan tampilan antarmuka melalui Blade Templating Engine. Oleh karena itu, pemahaman fundamental mengenai arsitektur dasar dan fungsionalitas struktur direktori Laravel sangat esensial agar pengembangan perangkat lunak dapat dilakukan secara terstandarisasi, aman, dan terukur (scalable).</p>
+                    <p>Praktikum ini dilaksanakan sebagai bagian dari pemenuhan tugas pada mata kuliah Praktikum Pemrograman Web di Departemen Informatika, Fakultas Teknologi Informasi, Universitas Andalas. Melalui kegiatan praktikum ini, mahasiswa diharapkan dapat memahami konsep dasar serta mengidentifikasi fungsi dari setiap komponen utama penyusun framework Laravel. Selain itu, mahasiswa juga diharapkan mampu menginisialisasi proyek baru, mengonfigurasi pengaturan dasar server lokal, serta menerapkan elemen-elemen arsitektur MVC dan routing dalam pengembangan program, sehingga dapat meningkatkan kemampuan teknis dalam membangun aplikasi web yang berstandar industri dan terstruktur dengan baik.</p>
+
+                    <h4 class="fw-bold mt-4">Rumusan Masalah</h4>
+                    <p>Berdasarkan modul praktikum yang telah diberikan, rumusan masalah dalam praktikum ini dapat dirumuskan sebagai berikut:</p>
+                    <ul>
+                        <li>Bagaimana cara menyiapkan perangkat lunak pendukung yang diperlukan agar framework Laravel dapat terpasang dan berfungsi dengan benar.</li>
+                        <li>Bagaimana langkah-langkah dalam membuat proyek baru serta menjalankan aplikasi Laravel agar dapat diakses secara lokal melalui browser.</li>
+                        <li>Bagaimana cara melakukan konfigurasi pada sistem routing untuk menampilkan pesan atau teks sederhana pada halaman web.</li>
+                    </ul>
+
+                    <h4 class="fw-bold mt-4">Tujuan</h4>
+                    <p>Berdasarkan rumusan masalah yang telah dijabarkan, maka tujuan dari pelaksanaan praktikum ini adalah sebagai berikut:</p>
+                    <ul>
+                        <li>Mahasiswa mampu menyiapkan dan mengonfigurasi perangkat lunak pendukung (seperti Composer dan Node.js) yang dibutuhkan oleh framework Laravel.</li>
+                        <li>Mahasiswa mampu melakukan inisialisasi proyek baru dan mengaktifkan server lokal untuk menjalankan aplikasi Laravel.</li>
+                        <li>Mahasiswa mampu mengimplementasikan pengaturan rute sederhana untuk menampilkan teks pada halaman web sesuai dengan alamat URL yang ditentukan.</li>
+                    </ul>
+
+                    <h2 class="fw-bold mt-5 mb-4 border-bottom pb-2">Langkah-Langkah Pengerjaan</h2>
+                    
+                    <h4 class="fw-bold mt-4">Instalasi & Konfigurasi Laravel</h4>
+                    <ol>
+                        <li>Dilakukan penginstalan terhadap XAMPP, Composer, Git, dan Node Js beserta NPM sebagai perangkat dependency yang diperlukan untuk menjalani framework Laravel. Masing-masing software diunduh pada link yang tercantum pada modul yang telah diberikan oleh dosen.</li>
+                        <li class="mt-3">Setelah pengunduhan selesai, dilakukan pemeriksaan versi terhadap masing-masing software untuk memeriksa compatibility dengan framework Laravel yang akan digunakan.<br>
+                            <img src="images/versionCheck.png" class="img-fluid rounded my-3 shadow-sm" alt="Pemeriksaan Versi">
+                        </li>
+                        <li class="mt-3">Setelah pemeriksaan versi selesai, digunakan Terminal bawaan pada Visual Studio Code untuk membuat projek baru, dimana Laravel akan dijalani pada projek tersebut. Sebelum Laravel bisa dijalani, dibuat sebuah projek Laravel menggunakna Composer yang telah diunduh dengan mengetikkan perintah “composer create-project laravel/laravel=^12 if24b --prefer-dist” pada terminal.<br>
+                            <img src="images/langkahTiga.png" class="img-fluid rounded my-3 shadow-sm" alt="Membuat Projek Laravel">
+                        </li>
+                        <li class="mt-3">Langkah berikutnya adalah memindahkan direktori kerja ke dalam folder proyek yang telah diinisialisasi menggunakan perintah cd if24b. Setelah berada di dalam direktori tersebut, instalasi paket Node.js beserta kompilasi aset dijalankan secara berurutan dengan mengetikkan perintah “npm install && npm run build” pada terminal.<br>
+                            <img src="images/langkahEmpat.png" class="img-fluid rounded my-3 shadow-sm" alt="npm install"><br>
+                            <img src="images/langkahEmpat_2.png" class="img-fluid rounded my-3 shadow-sm" alt="npm run build">
+                        </li>
+                        <li class="mt-3">Untuk mendukung pemantauan perubahan kode secara langsung (real-time), proses kompilasi aset secara berkelanjutan diaktifkan dengan menjalankan perintah npm run dev pada terminal.</li>
+                        <li class="mt-3">Setelah itu, diaktifkannya server development lokal agar Laravel dapat diakses melalui browser dengan mengetikkan perintah “php artisan serve” pada terminal.<br>
+                            <img src="images/langkahEnam.png" class="img-fluid rounded my-3 shadow-sm" alt="php artisan serve">
+                        </li>
+                    </ol>
+
+                    <h4 class="fw-bold mt-4">Pengantar Laravel</h4>
+                    <ol>
+                        <li>Langkah pertama dalam menampilkan teks "Hello World" pada framework Laravel adalah dengan mengakses konfigurasi routing pada folder routes/web.php. Selanjutnya, pendefinisian rute baru ditambahkan menggunakan fungsi Route::get(), di mana parameter pertama diisi dengan '/helo' sebagai target URL, dan parameter kedua menggunakan anonymous function (fungsi anonim) yang bertugas mengembalikan string "Hello World".<br>
+                            <img src="images/b_langkahSatu.png" class="img-fluid rounded my-3 shadow-sm" alt="Konfigurasi Routing">
+                        </li>
+                        <li class="mt-3">Setelah tahapan konfigurasi rute selesai, langkah selanjutnya adalah mengakses URL yang dihasilkan oleh eksekusi perintah php artisan serve pada terminal. URL tersebut kemudian dimasukkan ke dalam browser dengan menambahkan path /helo pada bagian akhir. Hasilnya, teks "Hello World" akan berhasil ditampilkan pada halaman browser.<br>
+                            <img src="images/b_langkahKedua.png" class="img-fluid rounded my-3 shadow-sm" alt="Akses URL via Browser"><br>
+                            <img src="images/tampilanHalaman.png" class="img-fluid rounded my-3 shadow-sm" alt="Tampilan Hello World">
+                        </li>
+                    </ol>
+
+                    <h4 class="fw-bold mt-4">Penjelasan Komponen Laravel</h4>
+                    <p>Berdasarkan arsitektur Model-View-Controller (MVC) dan sistem inti yang diusung oleh kerangka kerja Laravel, pengamatan difokuskan langsung pada komponen-komponen utama aplikasi. Penjelasan mengenai fungsi masing-masing komponen arsitektur tersebut diuraikan sebagai berikut:</p>
+                    <ul>
+                        <li><strong>Komponen Models:</strong> Terletak pada direktori app/Models. Komponen ini memiliki fungsi krusial dalam lapisan data, yang mencakup: a) merepresentasikan struktur entitas data aplikasi, b) menangani aturan logika bisnis terkait data tersebut, serta c) mengelola interaksi langsung dengan sistem basis data menggunakan Eloquent Object-Relational Mapping (ORM) untuk memanipulasi data tanpa memerlukan penulisan kueri SQL secara manual.</li>
+                        <li><strong>Komponen Views:</strong> Ditempatkan pada direktori resources/views. Komponen ini bertindak sebagai lapisan presentasi (presentation layer). Fungsi utama dari komponen ini meliputi: a) memisahkan logika pemrosesan aplikasi dari desain antarmuka pengguna, b) menyusun struktur visual menggunakan Blade Templating Engine, serta c) merender data yang dikirimkan oleh sistem menjadi format HTML yang siap ditampilkan pada browser.</li>
+                        <li><strong>Komponen Controllers:</strong> Berlokasi pada direktori app/Http/Controllers. Komponen ini berfungsi sebagai pusat kendali aliran program dengan rincian tugas: a) menerima dan mengevaluasi permintaan HTTP yang masuk, b) menginstruksikan komponen Models untuk melakukan operasi pengambilan atau manipulasi data, serta c) meneruskan hasil pemrosesan data tersebut ke komponen Views yang relevan untuk dirender.</li>
+                        <li><strong>Komponen Routes:</strong> Berada pada direktori routes, memegang peranan sebagai sistem pemetaan (router). Komponen ini difungsikan secara spesifik untuk: a) memetakan setiap alamat URL yang diakses menuju logika pemrosesan yang tepat, b) mengarahkan permintaan tersebut ke metode di dalam kelas Controllers, serta c) mendaftarkan lapisan penyaring HTTP (middleware).</li>
+                        <li><strong>Komponen Providers:</strong> Terletak pada direktori app/Providers. Beroperasi sebagai pusat registrasi layanan pada fase awal pemuatan aplikasi (bootstrapping). Tugas spesifik: a) melakukan registrasi pengikatan dependensi, b) mendaftarkan pendengar peristiwa maupun layanan eksternal, serta c) memuat konfigurasi fundamental.</li>
+                        <li><strong>Komponen Database (Migrations dan Seeders):</strong> Pengelolaan dirincikan menjadi: a) Migrations yang bertindak sebagai sistem kontrol versi untuk skema basis data, b) Seeders yang digunakan untuk mengeksekusi pengisian tabel dengan data awal secara otomatis, serta c) Factories yang difungsikan untuk menghasilkan kumpulan data tiruan.</li>
+                        <li><strong>Komponen Middleware:</strong> Diletakkan di antara Routes dan Controllers. Difungsikan untuk: a) mencegat dan mengevaluasi setiap permintaan HTTP yang masuk, b) melakukan tahapan verifikasi seperti pengecekan status autentikasi pengguna, serta c) memodifikasi data permintaan atau menolak akses langsung jika permintaan tidak memenuhi kriteria keamanan.</li>
+                        <li><strong>Komponen Service Container:</strong> Komponen ini merupakan elemen paling esensial dalam ekosistem Laravel yang bertugas untuk: a) mengelola siklus hidup serta instansiasi seluruh kelas, b) melaksanakan injeksi dependensi, serta c) memfasilitasi penyatuan antarmuka guna menghasilkan kode aplikasi yang sangat modular.</li>
+                        <li><strong>Komponen Artisan Console:</strong> Komponen berbasis antarmuka baris perintah ini difungsikan untuk: a) mengotomatisasi pembuatan kerangka kode, b) mengeksekusi instruksi pengelolaan Database seperti menjalankan migrations maupun seeders, serta c) menyediakan fasilitas untuk membersihkan cache sistem dan mengelola penjadwalan tugas di latar belakang.</li>
+                    </ul>
+
+                    <h2 class="fw-bold mt-5 mb-4 border-bottom pb-2">Kesimpulan</h2>
+                    <p>Berdasarkan praktikum yang telah dilakukan, dapat disimpulkan bahwa tahapan awal penggunaan framework Laravel telah berhasil dilaksanakan. Persiapan perangkat lunak pendukung telah dilakukan untuk memastikan lingkungan pengembangan siap digunakan. Prosedur pembuatan proyek baru telah berhasil diselesaikan sehingga struktur dasar aplikasi dapat terbentuk dengan benar. Selain itu, pengujian pada sistem routing telah berhasil dilakukan untuk menampilkan teks "Hello World" pada browser melalui alamat rute yang telah dikonfigurasi. Keberhasilan ini menunjukkan bahwa dasar-dasar penggunaan Laravel telah dipahami dan sistem telah siap untuk dikembangkan ke tahap selanjutnya.</p>
                 </div>
             </div>
         </div>
@@ -94,7 +161,7 @@
         <div class="row">
             <div class="col-12 text-center">
                 <span class="text-light lead d-block mt-4">
-                    � 2026 DaffaAiraAdrin. All rights reserved.
+                    � 2026 DaffaAiraAdrin. All rights reserved.
                 </span>
             </div>
         </div>
