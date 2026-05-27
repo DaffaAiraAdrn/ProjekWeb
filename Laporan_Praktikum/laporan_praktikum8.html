@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Praktikum 7 - Migration, Seeding, Routing, Model, Controller, View</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/custom.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="d-flex flex-column intro-content">
+    <header class="fixed-top">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-black">            
+            <div class="container">                
+                <a class="navbar-brand" href="../index.html">
+                    <img src="../images/hero.png" style="width: 50px; height: 50px;" alt="logo">
+                    DF_137
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-end text-center" id="navbarNav">
+                    <ul class="navbar-nav mb-2 mb-lg-0 gap-3 fs-5">
+                        <li class="nav-item"><a class="nav-link " href="../index.html">Home</a></li>
+                    </ul>                    
+                </div>
+            </div>
+        </nav>        
+    </header>
+    
+<main class="flex-fill container-fluid py-5 text-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-8">
+                <a href="../blog.html" class="btn btn-outline-light mb-4"><i class="bi bi-arrow-left me-2"></i>Back to Reports</a>
+                <h1 class="display-4 fw-bold mb-3">Migration, Seeding, Routing, Model, Controller, View</h1>
+                <p class="text-secondary mb-5">Published on: 27 May 2026</p>
+                
+                <div class="report-content lh-lg fs-5">
+                    
+                    <h2 class="fw-bold mt-5 mb-4 border-bottom pb-2">Pendahuluan</h2>
+                    
+                    <h4 class="fw-bold mt-4">Latar Belakang</h4>
+                    <p>Dalam pengembangan aplikasi web modern, penggunaan framework PHP seperti Laravel menjadi pilihan utama karena kemampuannya dalam menyediakan berbagai fitur yang memudahkan proses pembangunan aplikasi secara terstruktur dan efisien. Laravel menerapkan pola arsitektur MVC (Model View Controller) yang memisahkan logika bisnis, pengelolaan data, dan tampilan antarmuka sehingga kode program menjadi lebih modular dan mudah dipelihara. Selain itu, Laravel menyediakan berbagai fitur bawaan seperti migration untuk manajemen struktur database, seeding untuk pengisian data awal, routing untuk pengaturan URL aplikasi, Eloquent ORM untuk interaksi dengan database melalui model, controller sebagai penghubung antara model dan view, serta Blade Template Engine sebagai sistem templating yang fleksibel dan efisien.</p>
+                    <p>Pemahaman terhadap seluruh komponen tersebut merupakan dasar yang sangat penting bagi seorang pengembang aplikasi web dalam membangun sistem yang berjalan secara terintegrasi. Dengan memanfaatkan migration, developer dapat mengelola versi struktur database tanpa harus melakukan perubahan secara manual melalui antarmuka database. Seeder memungkinkan pengisian data uji coba secara otomatis sehingga proses pengujian aplikasi menjadi lebih mudah. Routing mengatur bagaimana permintaan dari pengguna diteruskan ke controller yang sesuai, sedangkan model berperan sebagai representasi data yang terhubung langsung dengan tabel di database. View bertanggung jawab atas tampilan yang dilihat oleh pengguna, sementara controller mengatur alur logika antara model dan view.</p>
+                    <p>Praktikum ini dilaksanakan sebagai bagian dari pemenuhan tugas pada mata kuliah Praktikum Pemrograman Web di Departemen Informatika, Fakultas Teknologi Informasi, Universitas Andalas. Melalui kegiatan ini, mahasiswa diharapkan dapat memahami dan mengimplementasikan seluruh komponen inti Laravel secara terpadu dalam membentuk aplikasi CRUD (Create, Read, Update, Delete) yang fungsional, sehingga memiliki dasar yang kuat untuk mempelajari pengembangan aplikasi web tingkat lanjut.</p>
+
+                    <h4 class="fw-bold mt-4">Rumusan Masalah</h4>
+                    <p>Rumusan masalah pada praktikum ini disusun berdasarkan implementasi komponen-komponen Laravel yang dipelajari. Berdasarkan modul dan percobaan yang dilakukan, rumusan masalah dalam praktikum ini dapat dijabarkan sebagai berikut:</p>
+                    <ul>
+                        <li>Bagaimana cara melakukan konfigurasi koneksi database pada aplikasi Laravel melalui file .env.</li>
+                        <li>Bagaimana cara membuat dan menjalankan migration untuk membentuk struktur tabel di database.</li>
+                        <li>Bagaimana cara membuat seeder untuk mengisi data awal ke dalam tabel database.</li>
+                        <li>Bagaimana cara mendefinisikan berbagai jenis routing pada Laravel meliputi routing dasar, routing parameter, named route, dan route group.</li>
+                        <li>Bagaimana cara membuat model menggunakan Eloquent ORM untuk melakukan operasi CRUD pada database.</li>
+                        <li>Bagaimana cara membuat controller dan menghubungkannya dengan route serta model.</li>
+                        <li>Bagaimana cara membuat view menggunakan Blade Template Engine dan menampilkan data dari controller.</li>
+                        <li>Bagaimana cara menggunakan fitur Blade Layout untuk membuat template tampilan yang dapat digunakan ulang pada banyak halaman.</li>
+                    </ul>
+
+                    <h4 class="fw-bold mt-4">Tujuan</h4>
+                    <p>Berdasarkan rumusan masalah yang telah dijabarkan, tujuan dari pelaksanaan praktikum ini adalah sebagai berikut:</p>
+                    <ul>
+                        <li>Mahasiswa mampu melakukan konfigurasi koneksi database Laravel melalui file .env sesuai dengan pengaturan XAMPP yang digunakan.</li>
+                        <li>Mahasiswa mampu membuat dan menjalankan migration untuk membentuk tabel pada database menggunakan perintah php artisan migrate.</li>
+                        <li>Mahasiswa mampu membuat seeder dan menjalankannya untuk mengisi data awal ke dalam tabel database.</li>
+                        <li>Mahasiswa mampu mendefinisikan berbagai jenis routing pada file routes/web.php meliputi routing dasar, routing parameter, named route, dan route group.</li>
+                        <li>Mahasiswa mampu membuat model menggunakan Eloquent ORM dan melakukan operasi CRUD melalui model tersebut.</li>
+                        <li>Mahasiswa mampu membuat controller, mendefinisikan method di dalamnya, dan menghubungkannya dengan route yang sesuai.</li>
+                        <li>Mahasiswa mampu membuat view menggunakan Blade Template Engine dan menampilkan data yang dikirim dari controller.</li>
+                        <li>Mahasiswa mampu membuat dan menggunakan Blade Layout sebagai template dasar halaman aplikasi web.</li>
+                    </ul>
+
+                    <h2 class="fw-bold mt-5 mb-4 border-bottom pb-2">Langkah-Langkah Pengerjaan</h2>
+                    
+                    <h4 class="fw-bold mt-4">Konfigurasi Database</h4>
+                    <p>Sebelum memulai pengerjaan, terlebih dahulu dilakukan pembuatan database dengan nama <code>praktikum_laravel</code> melalui phpMyAdmin yang dapat diakses melalui XAMPP. Kemudian dibuka file konfigurasi environment dengan nama <code>.env</code> yang berada pada direktori utama project Laravel. File ini berisi seluruh konfigurasi aplikasi termasuk koneksi database.</p>
+                    <p>Pada bagian konfigurasi database, diubah nilai dari beberapa variabel environment agar sesuai dengan pengaturan MySQL yang digunakan, yaitu:</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-env">DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=praktikum_laravel
+DB_USERNAME=root
+DB_PASSWORD=</code></pre>
+</div>
+
+                    <h4 class="fw-bold mt-4">Migration</h4>
+                    <p>Migration merupakan fitur Laravel yang digunakan untuk membuat dan mengelola struktur database menggunakan kode program. Untuk membuat file migration tabel products, dijalankan perintah artisan pada terminal sebagai berikut:</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-bash">php artisan make:migration create_products_table</code></pre>
+</div>
+                    <p>Setelah perintah dijalankan, terbentuk sebuah file migration baru pada folder <code>database/migrations</code>. File tersebut dimodifikasi untuk mendefinisikan struktur tabel yang akan dibuat.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">&lt;?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table-&gt;id();
+            $table-&gt;string('name');
+            $table-&gt;integer('price');
+            $table-&gt;text('description');
+            $table-&gt;timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('products');
+    }
+};</code></pre>
+</div>
+                    <p>Setelah file migration selesai dimodifikasi, dijalankan perintah eksekusi agar tabel terbentuk secara otomatis di dalam database.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-bash">php artisan migrate</code></pre>
+</div>
+
+                    <h4 class="fw-bold mt-4">Seeding</h4>
+                    <p>Untuk membuat file seeder, dijalankan perintah artisan berikut:</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-bash">php artisan make:seeder ProductSeeder</code></pre>
+</div>
+                    <p>File <code>ProductSeeder.php</code> kemudian diisi dengan data awal yang akan dimasukkan ke dalam tabel products.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">&lt;?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class ProductSeeder extends Seeder
+{
+    public function run(): void
+    {
+        DB::table('products')-&gt;insert([
+            [
+                'name'        =&gt; 'Laptop',
+                'price'       =&gt; 7000000,
+                'description' =&gt; 'Laptop untuk pemrograman',
+                'created_at'  =&gt; now(),
+                'updated_at'  =&gt; now(),
+            ],
+            [
+                'name'        =&gt; 'Mouse',
+                'price'       =&gt; 150000,
+                'description' =&gt; 'Mouse wireless',
+                'created_at'  =&gt; now(),
+                'updated_at'  =&gt; now(),
+            ]
+        ]);
+    }
+}</code></pre>
+</div>
+                    <p>Selanjutnya dilakukan pendaftaran seeder pada file <code>DatabaseSeeder.php</code> dan pengeksekusian dengan terminal.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">// Pada DatabaseSeeder.php
+$this-&gt;call(ProductSeeder::class);</code></pre>
+</div>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-bash">php artisan db:seed</code></pre>
+</div>
+
+                    <h4 class="fw-bold mt-4">Routing</h4>
+                    <p>Seluruh definisi routing untuk antarmuka web berada pada file <code>routes/web.php</code>. Terdapat beberapa jenis routing yang dipelajari.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">use Illuminate\Support\Facades\Route;
+
+// Routing Dasar
+Route::get('/', function () {
+    return 'Selamat Datang di Laravel';
+});
+
+// Routing Parameter
+Route::get('/produk/{id}', function ($id) {
+    return 'Produk ID: ' . $id;
+});
+
+// Named Route
+Route::get('/dashboard', function () {
+    return 'Halaman Dashboard';
+})-&gt;name('dashboard');
+
+// Route Group
+Route::prefix('admin')-&gt;group(function () {
+    Route::get('/dashboard', function () {
+        return 'Admin Dashboard';
+    });
+    Route::get('/products', function () {
+        return 'Data Products';
+    });
+});</code></pre>
+</div>
+
+                    <h4 class="fw-bold mt-4">Model</h4>
+                    <p>Untuk membuat model Product, dijalankan perintah artisan berikut:</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-bash">php artisan make:model Product</code></pre>
+</div>
+                    <p>Di dalam class <code>Product</code>, ditambahkan properti <code>$fillable</code> untuk mencegah kerentanan mass assignment.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Product extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'price',
+        'description'
+    ];
+}</code></pre>
+</div>
+
+                    <h4 class="fw-bold mt-4">Controller</h4>
+                    <p>Untuk membuat resource controller, dijalankan perintah artisan berikut:</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-bash">php artisan make:controller ProductController --resource</code></pre>
+</div>
+                    <p>Untuk menghubungkan resource controller dengan route, digunakan baris berikut pada <code>web.php</code>.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">use App\Http\Controllers\ProductController;
+
+Route::resource('products', ProductController::class);</code></pre>
+</div>
+                    <p>Kemudian method <code>index()</code> pada controller dikembangkan agar mengambil data langsung dari database melalui model.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Product;
+use Illuminate\Http\Request;
+
+class ProductController extends Controller
+{
+    public function index()
+    {
+        $products = Product::all();
+        return view('products', compact('products'));
+    }
+}</code></pre>
+</div>
+
+                    <h4 class="fw-bold mt-4">View & Blade Layout</h4>
+                    <p>Dibuat file layout utama pada <code>resources/views/layouts/app.blade.php</code>.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;@yield('title')&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Aplikasi Laravel&lt;/h1&gt;
+    @yield('content')
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+                    <p>View <code>products.blade.php</code> dimodifikasi untuk menggunakan layout tersebut.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-html">@extends('layouts.app')
+
+@section('title', 'Products')
+
+@section('content')
+    &lt;ul&gt;
+        @foreach ($products as $product)
+            &lt;li&gt;{{ $product-&gt;name }} - Rp. {{ $product-&gt;price }}&lt;/li&gt;
+        @endforeach
+    &lt;/ul&gt;
+@endsection</code></pre>
+</div>
+
+                    <h2 class="fw-bold mt-5 mb-4 border-bottom pb-2">Tugas Modul: CRUD Data Mahasiswa</h2>
+                    <p>Berdasarkan instruksi tugas yang terdapat pada modul praktikum, dilakukan pembuatan fitur CRUD (Create, Read, Update, Delete) secara lengkap untuk entitas Mahasiswa. Implementasi ini mencakup pembuatan Migration, Seeding, Model, Route, Controller, dan View.</p>
+                    
+                    <h4 class="fw-bold mt-4">1. Migration Tabel Mahasiswa</h4>
+                    <p>Langkah pertama adalah mengeksekusi perintah <code>php artisan make:migration create_mahasiswas_table</code> pada terminal. Pada file migration yang dihasilkan, method <code>up()</code> dilengkapi dengan struktur tabel mahasiswa meliputi nim, nama, email, jurusan, dan angkatan.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">&lt;?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('mahasiswas', function (Blueprint $table) {
+            $table-&gt;id();
+            $table-&gt;string('nim')-&gt;unique();
+            $table-&gt;string('nama');
+            $table-&gt;string('email')-&gt;unique();
+            $table-&gt;string('jurusan');
+            $table-&gt;integer('angkatan');
+            $table-&gt;timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('mahasiswas');
+    }
+};</code></pre>
+</div>
+                    <p>Setelah file selesai, struktur tersebut diaplikasikan ke database dengan perintah <code>php artisan migrate</code>.</p>
+
+                    <h4 class="fw-bold mt-4">2. Seeding Data Mahasiswa</h4>
+                    <p>Agar aplikasi memiliki data awal, dibuat sebuah seeder dengan perintah <code>php artisan make:seeder MahasiswaSeeder</code>. File tersebut kemudian diisi dengan beberapa data *dummy* menggunakan Query Builder.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">&lt;?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class MahasiswaSeeder extends Seeder
+{
+    public function run(): void
+    {
+        DB::table('mahasiswas')-&gt;insert([
+            [
+                'nim' =&gt; '2411531006',
+                'nama' =&gt; 'Daffa Aira Adrin',
+                'email' =&gt; 'daffa@unand.ac.id',
+                'jurusan' =&gt; 'Informatika',
+                'angkatan' =&gt; 2024,
+                'created_at' =&gt; now(),
+                'updated_at' =&gt; now(),
+            ],
+            [
+                'nim' =&gt; '2411531007',
+                'nama' =&gt; 'Habibi',
+                'email' =&gt; 'habibi@unand.ac.id',
+                'jurusan' =&gt; 'Sistem Informasi',
+                'angkatan' =&gt; 2024,
+                'created_at' =&gt; now(),
+                'updated_at' =&gt; now(),
+            ],
+            [
+                'nim' =&gt; '2411531008',
+                'nama' =&gt; 'Budi',
+                'email' =&gt; 'budi@unand.ac.id',
+                'jurusan' =&gt; 'Teknik Komputer',
+                'angkatan' =&gt; 2024,
+                'created_at' =&gt; now(),
+                'updated_at' =&gt; now(),
+            ]
+        ]);
+    }
+}</code></pre>
+</div>
+                    <p>Pemanggilan seeder ditambahkan pada <code>DatabaseSeeder.php</code> dengan perintah <code>$this-&gt;call(MahasiswaSeeder::class);</code> lalu di eksekusi menggunakan <code>php artisan db:seed</code>.</p>
+
+                    <h4 class="fw-bold mt-4">3. Model Mahasiswa</h4>
+                    <p>Pembuatan model dilakukan dengan menjalankan perintah <code>php artisan make:model Mahasiswa</code>. Agar data dapat dimasukkan melalui formulir tanpa memicu error keamanan *mass assignment*, didefinisikan properti <code>$fillable</code> di dalam file model <code>Mahasiswa.php</code>.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">&lt;?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Mahasiswa extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'nim',
+        'nama',
+        'email',
+        'jurusan',
+        'angkatan',
+    ];
+}</code></pre>
+</div>
+
+                    <h4 class="fw-bold mt-4">4. Controller dan Routing</h4>
+                    <p>Dibuat sebuah resource controller menggunakan perintah <code>php artisan make:controller MahasiswaController --resource</code>. Pada file <code>routes/web.php</code>, ditambahkan registrasi *resource route* agar seluruh fungsi CRUD langsung terhubung secara otomatis ke controller.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">// Pada file routes/web.php
+use App\Http\Controllers\MahasiswaController;
+
+Route::resource('mahasiswas', MahasiswaController::class);</code></pre>
+</div>
+                    <p>File <code>MahasiswaController.php</code> kemudian disusun logika bisnisnya mulai dari menampilkan data (<code>index</code>), menangani validasi input penambahan (<code>store</code>), mengubah data (<code>update</code>), hingga menghapus (<code>destroy</code>).</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">&lt;?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Mahasiswa;
+use Illuminate\Http\Request;
+
+class MahasiswaController extends Controller
+{
+    public function index()
+    {
+        $mahasiswas = Mahasiswa::all();
+        return view('mahasiswas.index', compact('mahasiswas'));
+    }
+
+    public function create()
+    {
+        return view('mahasiswas.create');
+    }
+
+    public function store(Request $request)
+    {
+        $request-&gt;validate([
+            'nim' =&gt; 'required|unique:mahasiswas',
+            'nama' =&gt; 'required',
+            'email' =&gt; 'required|email|unique:mahasiswas',
+            'jurusan' =&gt; 'required',
+            'angkatan' =&gt; 'required|integer',
+        ]);
+
+        Mahasiswa::create($request-&gt;all());
+        return redirect()-&gt;route('mahasiswas.index')
+                         -&gt;with('success', 'Data mahasiswa berhasil ditambahkan.');
+    }
+
+    public function edit(Mahasiswa $mahasiswa)
+    {
+        return view('mahasiswas.edit', compact('mahasiswa'));
+    }
+
+    public function update(Request $request, Mahasiswa $mahasiswa)
+    {
+        $request-&gt;validate([
+            'nim' =&gt; 'required|unique:mahasiswas,nim,' . $mahasiswa-&gt;id,
+            'nama' =&gt; 'required',
+            'email' =&gt; 'required|email|unique:mahasiswas,email,' . $mahasiswa-&gt;id,
+            'jurusan' =&gt; 'required',
+            'angkatan' =&gt; 'required|integer',
+        ]);
+
+        $mahasiswa-&gt;update($request-&gt;all());
+        return redirect()-&gt;route('mahasiswas.index')
+                         -&gt;with('success', 'Data mahasiswa berhasil diperbarui.');
+    }
+
+    public function destroy(Mahasiswa $mahasiswa)
+    {
+        $mahasiswa-&gt;delete();
+        return redirect()-&gt;route('mahasiswas.index')
+                         -&gt;with('success', 'Data mahasiswa berhasil dihapus.');
+    }
+}</code></pre>
+</div>
+
+                    <h4 class="fw-bold mt-4">5. View untuk Mahasiswa</h4>
+                    <p>Di dalam folder <code>resources/views/mahasiswas</code>, dibuat tiga file Blade utama untuk mengakomodasi tampilan antarmuka kepada pengguna.</p>
+                    <p><strong>A. File index.blade.php</strong> digunakan untuk menampilkan tabel dari keseluruhan data mahasiswa.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-html">@extends('layouts.app')
+@section('title', 'Data Mahasiswa')
+
+@section('content')
+    &lt;h2&gt;Daftar Mahasiswa&lt;/h2&gt;
+    &lt;a href="{{ route('mahasiswas.create') }}"&gt;+ Tambah Mahasiswa&lt;/a&gt;
+
+    @if (session('success'))
+        &lt;div&gt;{{ session('success') }}&lt;/div&gt;
+    @endif
+
+    &lt;table border="1" cellpadding="10" cellspacing="0" style="margin-top: 15px; width: 100%;"&gt;
+        &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;No&lt;/th&gt;
+                &lt;th&gt;NIM&lt;/th&gt;
+                &lt;th&gt;Nama&lt;/th&gt;
+                &lt;th&gt;Email&lt;/th&gt;
+                &lt;th&gt;Jurusan&lt;/th&gt;
+                &lt;th&gt;Angkatan&lt;/th&gt;
+                &lt;th&gt;Aksi&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+            @foreach ($mahasiswas as $index =&gt; $mhs)
+            &lt;tr&gt;
+                &lt;td&gt;{{ $index + 1 }}&lt;/td&gt;
+                &lt;td&gt;{{ $mhs-&gt;nim }}&lt;/td&gt;
+                &lt;td&gt;{{ $mhs-&gt;nama }}&lt;/td&gt;
+                &lt;td&gt;{{ $mhs-&gt;email }}&lt;/td&gt;
+                &lt;td&gt;{{ $mhs-&gt;jurusan }}&lt;/td&gt;
+                &lt;td&gt;{{ $mhs-&gt;angkatan }}&lt;/td&gt;
+                &lt;td&gt;
+                    &lt;a href="{{ route('mahasiswas.edit', $mhs-&gt;id) }}"&gt;Edit&lt;/a&gt; | 
+                    &lt;form action="{{ route('mahasiswas.destroy', $mhs-&gt;id) }}" method="POST" style="display:inline;"&gt;
+                        @csrf
+                        @method('DELETE')
+                        &lt;button type="submit" onclick="return confirm('Apakah yakin menghapus data ini?')"&gt;Hapus&lt;/button&gt;
+                    &lt;/form&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+            @endforeach
+        &lt;/tbody&gt;
+    &lt;/table&gt;
+@endsection</code></pre>
+</div>
+                    <p><strong>B. File create.blade.php</strong> dirancang sebagai formulir untuk menambahkan entitas mahasiswa baru ke dalam sistem.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-html">@extends('layouts.app')
+@section('title', 'Tambah Mahasiswa')
+
+@section('content')
+    &lt;h2&gt;Tambah Data Mahasiswa&lt;/h2&gt;
+    &lt;form action="{{ route('mahasiswas.store') }}" method="POST"&gt;
+        @csrf
+        &lt;div&gt;
+            &lt;label&gt;NIM:&lt;/label&gt;&lt;br&gt;
+            &lt;input type="text" name="nim" required&gt;
+        &lt;/div&gt;&lt;br&gt;
+        &lt;div&gt;
+            &lt;label&gt;Nama:&lt;/label&gt;&lt;br&gt;
+            &lt;input type="text" name="nama" required&gt;
+        &lt;/div&gt;&lt;br&gt;
+        &lt;div&gt;
+            &lt;label&gt;Email:&lt;/label&gt;&lt;br&gt;
+            &lt;input type="email" name="email" required&gt;
+        &lt;/div&gt;&lt;br&gt;
+        &lt;div&gt;
+            &lt;label&gt;Jurusan:&lt;/label&gt;&lt;br&gt;
+            &lt;input type="text" name="jurusan" required&gt;
+        &lt;/div&gt;&lt;br&gt;
+        &lt;div&gt;
+            &lt;label&gt;Angkatan:&lt;/label&gt;&lt;br&gt;
+            &lt;input type="number" name="angkatan" required&gt;
+        &lt;/div&gt;&lt;br&gt;
+        &lt;button type="submit"&gt;Simpan&lt;/button&gt;
+        &lt;a href="{{ route('mahasiswas.index') }}"&gt;Kembali&lt;/a&gt;
+    &lt;/form&gt;
+@endsection</code></pre>
+</div>
+                    <p><strong>C. File edit.blade.php</strong> diimplementasikan untuk menangani perubahan atau pembaharuan data mahasiswa yang sudah ada di database.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-html">@extends('layouts.app')
+@section('title', 'Edit Mahasiswa')
+
+@section('content')
+    &lt;h2&gt;Edit Data Mahasiswa&lt;/h2&gt;
+    &lt;form action="{{ route('mahasiswas.update', $mahasiswa-&gt;id) }}" method="POST"&gt;
+        @csrf
+        @method('PUT')
+        &lt;div&gt;
+            &lt;label&gt;NIM:&lt;/label&gt;&lt;br&gt;
+            &lt;input type="text" name="nim" value="{{ $mahasiswa-&gt;nim }}" required&gt;
+        &lt;/div&gt;&lt;br&gt;
+        &lt;div&gt;
+            &lt;label&gt;Nama:&lt;/label&gt;&lt;br&gt;
+            &lt;input type="text" name="nama" value="{{ $mahasiswa-&gt;nama }}" required&gt;
+        &lt;/div&gt;&lt;br&gt;
+        &lt;div&gt;
+            &lt;label&gt;Email:&lt;/label&gt;&lt;br&gt;
+            &lt;input type="email" name="email" value="{{ $mahasiswa-&gt;email }}" required&gt;
+        &lt;/div&gt;&lt;br&gt;
+        &lt;div&gt;
+            &lt;label&gt;Jurusan:&lt;/label&gt;&lt;br&gt;
+            &lt;input type="text" name="jurusan" value="{{ $mahasiswa-&gt;jurusan }}" required&gt;
+        &lt;/div&gt;&lt;br&gt;
+        &lt;div&gt;
+            &lt;label&gt;Angkatan:&lt;/label&gt;&lt;br&gt;
+            &lt;input type="number" name="angkatan" value="{{ $mahasiswa-&gt;angkatan }}" required&gt;
+        &lt;/div&gt;&lt;br&gt;
+        &lt;button type="submit"&gt;Perbarui Data&lt;/button&gt;
+        &lt;a href="{{ route('mahasiswas.index') }}"&gt;Batal&lt;/a&gt;
+    &lt;/form&gt;
+@endsection</code></pre>
+</div>
+
+                    <h2 class="fw-bold mt-5 mb-4 border-bottom pb-2">Kesimpulan</h2>
+                    <p>Berdasarkan praktikum yang telah dilaksanakan, konfigurasi database pada Laravel dilakukan melalui file .env dengan mengatur variabel DB_CONNECTION, DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, dan DB_PASSWORD sesuai dengan pengaturan server MySQL yang digunakan. Konfigurasi ini menjadi dasar dari seluruh interaksi antara aplikasi dengan database.</p>
+                    <p>Migration merupakan fitur Laravel yang digunakan untuk membuat dan mengelola struktur database melalui kode program. File migration mendefinisikan skema tabel di dalam method up() dan operasi pembalikan di dalam method down(). Migration dijalankan menggunakan perintah php artisan migrate, dapat dibatalkan dengan migrate:rollback, dan diulang dari awal dengan migrate:fresh.</p>
+                    <p>Seeding digunakan untuk mengisi data awal ke dalam tabel database secara otomatis. Seeder dibuat menggunakan perintah php artisan make:seeder, didaftarkan pada DatabaseSeeder, dan dieksekusi dengan php artisan db:seed.</p>
+                    <p>Routing pada Laravel digunakan untuk menentukan URL beserta respons yang diberikan aplikasi. Terdapat berbagai jenis routing yang dapat didefinisikan pada file routes/web.php, meliputi routing dasar untuk URL statis, routing parameter untuk menangkap nilai dinamis dari URL, named route untuk memberikan nama pada route, dan route group untuk mengelompokkan route yang memiliki prefix yang sama.</p>
+                    <p>Model pada Laravel menggunakan Eloquent ORM yang memungkinkan operasi CRUD database dilakukan menggunakan sintaks PHP yang bersih. Properti $fillable pada model digunakan untuk mendefinisikan kolom yang diizinkan untuk diisi secara massal guna mencegah kerentanan keamanan. Controller berperan sebagai penghubung antara model, view, dan request pengguna. Setiap method di dalam controller bertanggung jawab menangani sebuah aksi tertentu. Resource controller menyediakan tujuh method standar CRUD secara otomatis dan dapat dihubungkan dengan route menggunakan Route::resource().</p>
+                    <p>View pada Laravel menggunakan Blade Template Engine yang menyediakan directive seperti @foreach untuk perulangan data dan {{ }} untuk menampilkan nilai variabel secara aman. Fitur Blade Layout memungkinkan pembuatan template yang dapat digunakan ulang pada banyak halaman sehingga kode tampilan menjadi lebih efisien, terstruktur, dan mudah dipelihara.</p>
+
+                    <div class="mt-5 p-4 bg-dark text-light rounded-4 shadow border border-secondary">
+                        <h4 class="fw-bold mb-3"><i class="bi bi-github me-2"></i>Repository Praktikum</h4>
+                        <p class="mb-2">Kode sumber dan file konfigurasi dari praktikum ini dapat diakses pada repositori GitHub berikut:</p>
+                        <a href="https://github.com/DaffaAiraAdrn/PemogramanWeb_2411531006" target="_blank" class="text-info text-decoration-none fw-semibold fs-5">
+                            https://github.com/DaffaAiraAdrn/PemogramanWeb_2411531006
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+    <footer class="footer-section container-fluid mt-5 py-5">
+        <hr class="border-secondary mb-4">
+        <div class="row text-light px-3">
+            <div class="col-12 col-md-4 col-lg-4 mb-4 text-md-start text-center">
+                <h5 class="fw-bold mb-3">Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="../index.html" class="text-light text-decoration-none">Home</a></li>
+                    <li><a href="../about.html" class="text-light text-decoration-none">About</a></li>
+                    <li><a href="../portfolio.html" class="text-light text-decoration-none">Portfolio</a></li>
+                    <li><a href="../contact.html" class="text-light text-decoration-none">Contact</a></li>
+                    <li><a href="../blog.html" class="text-light text-decoration-none">Blog</a></li>
+                </ul>
+            </div>
+            <div class="col-12 col-md-4 col-lg-4 mb-4 text-center">
+                <h4 class="fw-bold">Daffa Aira Adrin</h4>
+                <div class="mt-3">
+                    <a href="https://github.com/DaffaAiraAdrn" target="_blank" class="text-light fs-3 me-3">
+                        <i class="bi bi-github"></i>
+                    </a>
+                    <a href="https://youtube.com/@360hz4" target="_blank" class="text-light fs-3 me-3">
+                        <i class="bi bi-youtube"></i>
+                    </a>
+                    <a href="https://instagram.com/df__137" target="_blank" class="text-light fs-3 me-3">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a href="mailto:2411531006_daffa@unand.ac.id" target="_blank" class="text-light fs-3">
+                        <i class="bi bi-envelope"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 col-lg-4 mb-4 text-md-end text-center">
+                <h5 class="fw-bold mb-3">About</h5>
+                <p class="small">
+                    I am Daffa Aira Adrin, an Informatics student passionate about 3D Modeling,
+                    Machine Learning, and Programming.  
+                    This website is where I share my projects, skills, and ideas.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <span class="text-light lead d-block mt-4">
+                    © 2026 DaffaAiraAdrin. All rights reserved.
+                </span>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.addEventListener("load", () => {
+            document.body.classList.add("page-loaded");
+        });
+    </script>
+
+</body>
+</html>
