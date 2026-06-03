@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Praktikum 9 - Laravel Relationship</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/custom.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="d-flex flex-column intro-content">
+    <header class="fixed-top">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-black">            
+            <div class="container">                
+                <a class="navbar-brand" href="../index.html">
+                    <img src="../images/hero.png" style="width: 50px; height: 50px;" alt="logo">
+                    DF_137
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-end text-center" id="navbarNav">
+                    <ul class="navbar-nav mb-2 mb-lg-0 gap-3 fs-5">
+                        <li class="nav-item"><a class="nav-link " href="../index.html">Home</a></li>
+                    </ul>                    
+                </div>
+            </div>
+        </nav>        
+    </header>
+    
+<main class="flex-fill container-fluid py-5 text-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-8">
+                <a href="../blog.html" class="btn btn-outline-light mb-4"><i class="bi bi-arrow-left me-2"></i>Back to Reports</a>
+                <h1 class="display-4 fw-bold mb-3">Laravel Relationship: Student, Major, dan Subject</h1>
+                <p class="text-secondary mb-5">Published on: 3 June 2026</p>
+                
+                <div class="report-content lh-lg fs-5">
+                    
+                    <h2 class="fw-bold mt-5 mb-4 border-bottom pb-2">Pendahuluan</h2>
+                    
+                    <h4 class="fw-bold mt-4">Latar Belakang</h4>
+                    <p>Dalam pengembangan aplikasi web modern berbasis bahasa pemrograman PHP, pemanfaatan kerangka kerja (framework) menjadi suatu kebutuhan mendesak untuk meningkatkan efisiensi waktu dan menjaga keteraturan struktur kode program. Laravel merupakan salah satu framework PHP yang banyak digunakan karena mengusung pola arsitektur Model-View-Controller (MVC), yang berfungsi secara sistematis memisahkan antara logika bisnis, pengelolaan basis data, dan antarmuka pengguna. Lebih jauh lagi, dalam pengelolaan basis data relasional, pengaturan hubungan antar entitas (relationship) memegang peranan esensial untuk menjaga integritas dan keterhubungan data. Kerangka kerja Laravel, melalui fitur Eloquent ORM (Object-Relational Mapping), memberikan pendekatan yang sangat komprehensif dalam memetakan relasi tabel secara langsung (object-oriented) tanpa mengharuskan penulisan kueri SQL yang rumit secara manual. Dengan pemanfaatan fitur ini, operasi pengelolaan data kompleks yang melibatkan beberapa tabel dapat dilakukan secara efisien, modular, dan terstruktur.</p>
+                    <p>Praktikum ini dilaksanakan sebagai bagian dari pemenuhan tugas pada mata kuliah Praktikum Pemrograman Web di Departemen Informatika, Fakultas Teknologi Informasi, Universitas Andalas. Pelaksanaan praktikum ini ditujukan untuk memfasilitasi pemahaman mendalam terkait implementasi dua bentuk relasi fundamental, yaitu One-to-Many dan Many-to-Many. Objek pengamatan difokuskan pada perancangan sistem akademik berskala kecil yang menghubungkan entitas mahasiswa (Student), program studi (Major), serta mata kuliah (Subject). Melalui pengimplementasian relasi ini, diharapkan tercipta struktur perangkat lunak yang memenuhi standar skalabilitas yang baik dan mampu mengelola relasi data secara optimal di tingkat basis data maupun pada tingkat presentasi (View).</p>
+
+                    <h4 class="fw-bold mt-4">Rumusan Masalah</h4>
+                    <p>Berdasarkan modul praktikum yang menjadi acuan, rumusan masalah dalam praktikum ini dapat dirumuskan sebagai berikut:</p>
+                    <ul>
+                        <li>Bagaimana prosedur yang tepat dalam pembuatan file migrasi (migration) yang melibatkan pendefinisian kunci tamu (foreign key) untuk membentuk relasi antar tabel.</li>
+                        <li>Bagaimana langkah-langkah dalam membangun relasi model One-to-Many dan Many-to-Many dengan menggunakan Eloquent ORM.</li>
+                        <li>Bagaimana cara memanfaatkan relasi Eloquent dalam proses pengambilan data (query) untuk meminimalkan beban basis data, termasuk teknik pemuatan data awal (eager loading).</li>
+                        <li>Bagaimana cara menyajikan data yang memiliki keterhubungan kompleks pada lapisan antarmuka atau tampilan (View).</li>
+                    </ul>
+
+                    <h4 class="fw-bold mt-4">Tujuan</h4>
+                    <p>Berdasarkan rumusan masalah yang telah dijabarkan, maka tujuan dari pelaksanaan praktikum ini adalah sebagai berikut:</p>
+                    <ul>
+                        <li>Mahasiswa mampu memahami secara komprehensif konsep relationship yang disediakan oleh kerangka kerja Laravel.</li>
+                        <li>Mahasiswa mampu mengimplementasikan pembuatan file migrasi berserta aturan foreign key yang sesuai.</li>
+                        <li>Mahasiswa mampu menerapkan hubungan One-to-Many antara entitas Major dan Student, serta hubungan Many-to-Many antara entitas Student dan Subject.</li>
+                        <li>Mahasiswa mampu menyusun controller yang mengelola data berelasi dan menampilkannya secara efisien di dalam file Blade Template.</li>
+                    </ul>
+
+                    <h2 class="fw-bold mt-5 mb-4 border-bottom pb-2">Langkah-Langkah Pengerjaan</h2>
+                    
+                    <h4 class="fw-bold mt-4">1. Persiapan Struktur Database dan Pembuatan Migration</h4>
+                    <p>Tahap awal difokuskan pada perancangan struktur basis data. Dilakukan pembentukan empat file migrasi utama, yaitu untuk entitas <code>majors</code>, <code>students</code>, <code>subjects</code>, serta satu tabel perantara (pivot table) <code>student_subject</code> yang difungsikan untuk menjembatani relasi Many-to-Many.</p>
+                    
+                    <p><strong>A. Tabel Majors</strong><br>
+                    Pembuatan tabel <code>majors</code> diinisialisasi dengan mengeksekusi perintah <code>php artisan make:migration create_majors_table</code> pada antarmuka baris perintah (Command Line Interface). Struktur tabel ini dirancang sangat fundamental, hanya menyimpan data identitas program studi pada atribut bertipe string, yaitu <code>name</code>. Fungsi <code>$table-&gt;id()</code> disertakan secara implisit untuk membentuk kolom , sedangkan <code>$table-&gt;timestamps()</code> bertugas memonitor waktu pembuatan (<code>created_at</code>) dan pembaharuan data (<code>updated_at</code>).</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">Schema::create('majors', function (Blueprint $table) {
+    $table-&gt;id();
+    $table-&gt;string('name');
+    $table-&gt;timestamps();
+});</code></pre>
+</div>
+                    <img src="../images/ImageP8/Langkah1.png" class="img-fluid rounded my-3 shadow-sm" alt="Migration Majors">
+
+                    <p><strong>B. Tabel Students</strong><br>
+                    Untuk mengakomodasi penyimpanan data mahasiswa, dibentuk tabel <code>students</code> melalui perintah <code>php artisan make:migration create_students_table</code>. Pada tabel ini, selain kolom , atribut dasar seperti Nomor Induk Mahasiswa (<code>nim</code>), nama lengkap (<code>name</code>), dan alamat (<code>address</code>) ditambahkan ke dalam skema. Guna menjaga keutuhan relasi dengan tabel <code>majors</code>, disertakan kolom <code>major_id</code> yang difungsikan sebagai kunci tamu (foreign key). Konfigurasi <code>foreignId('major_id')-&gt;constrained('majors')-&gt;onDelete('cascade')</code> memastikan bahwa penghapusan suatu program studi akan secara otomatis menghapus seluruh data mahasiswa yang tertaut padanya, sehingga tidak menyisakan  pada sistem basis data.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">Schema::create('students', function (Blueprint $table) {
+    $table-&gt;id();
+    $table-&gt;string('nim')-&gt;unique();
+    $table-&gt;string('name');
+    $table-&gt;text('address');
+    $table-&gt;foreignId('major_id')-&gt;constrained('majors')-&gt;onDelete('cascade');
+    $table-&gt;timestamps();
+});</code></pre>
+</div>
+                    <img src="../images/ImageP8/Langkah3.png" class="img-fluid rounded my-3 shadow-sm" alt="Migration Students">
+
+                    <p><strong>C. Tabel Subjects</strong><br>
+                    Pembuatan tabel <code>subjects</code> dilakukan dengan memanggil instruksi <code>php artisan make:migration create_subjects_table</code>. Tabel ini disusun untuk menampung entitas mata kuliah, meliputi nama dari mata kuliah itu sendiri pada kolom <code>name</code> berserta beban Satuan Kredit Semester yang ditampung dalam kolom bertipe bilangan bulat <code>sks</code>.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">Schema::create('subjects', function (Blueprint $table) {
+    $table-&gt;id();
+    $table-&gt;string('name');
+    $table-&gt;integer('sks');
+    $table-&gt;timestamps();
+});</code></pre>
+</div>
+                    <img src="../images/ImageP8/Langkah4.png" class="img-fluid rounded my-3 shadow-sm" alt="Migration Subjects">
+
+                    <p><strong>D. Tabel Pivot Student_Subject</strong><br>
+                    Dalam arsitektur basis data relasional, hubungan antar entitas dengan pola Many-to-Many memerlukan perantara berupa . Untuk merealisasikan relasi antara mahasiswa dan mata kuliah, dibentuklah tabel <code>student_subject</code> menggunakan instruksi <code>php artisan make:migration create_student_subject_table</code>. Pada tabel perantara ini, kolom <code>student_id</code> dan <code>subject_id</code> dikonfigurasi sebagai kunci tamu. Guna menanggulangi anomali duplikasi entri (seperti seorang mahasiswa didaftarkan pada mata kuliah yang sama lebih dari satu kali), ditambahkan pengaturan <code>$table-&gt;unique(['student_id', 'subject_id'])</code>.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">Schema::create('student_subject', function (Blueprint $table) {
+    $table-&gt;id();
+    $table-&gt;foreignId('student_id')-&gt;constrained('students')-&gt;onDelete('cascade');
+    $table-&gt;foreignId('subject_id')-&gt;constrained('subjects')-&gt;onDelete('cascade');
+    $table-&gt;timestamps();
+    
+    // Mencegah duplikasi kombinasi student_id dan subject_id
+    $table-&gt;unique(['student_id', 'subject_id']);
+});</code></pre>
+</div>
+                    <img src="../images/ImageP8/Langkah5.png" class="img-fluid rounded my-3 shadow-sm" alt="Migration Pivot">
+                    <p>Setelah seluruh susunan migrasi dirancang dengan matang, tahapan fisikasi skema pada basis data dieksekusi dengan memanggil utilitas baris perintah <code>php artisan migrate</code>.</p>
+                    <img src="../images/ImageP8/Langkah6.png" class="img-fluid rounded my-3 shadow-sm" alt="Jalankan Migration">
+
+                    <h4 class="fw-bold mt-4">2. Pembentukan Model dengan Definisi Relationship</h4>
+                    <p>Selanjutnya, representasi entitas pada aras aplikasi direalisasikan lewat penciptaan file Model. Agar fungsionalitas ORM berjalan optimal, definisi relasi antar tabel tidak ditulis menggunakan kueri SQL mentah, melainkan dengan memetakan keterhubungan tersebut ke dalam fungsi-fungsi internal pada kelas Model.</p>
+                    
+                    <p><strong>A. Model Major</strong><br>
+                    Model pertama dibuat dengan perintah <code>php artisan make:model Major</code>. Agar interaksi masukan secara masal dari formulir daring tidak menimbulkan celah keamanan, variabel properti terlindungi <code>$fillable</code> disisipkan. Selanjutnya, relasi One-to-Many direpresentasikan lewat fungsi <code>students()</code> yang mengembalikan nilai dari metode <code>hasMany(Student::class)</code>. Instruksi ini memberi sinyal kepada sistem bahwa satu rekaman entitas program studi berpotensi menaungi banyak rekaman mahasiswa.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">protected $fillable = ['name'];
+
+public function students()
+{
+    return $this-&gt;hasMany(Student::class);
+}</code></pre>
+</div>
+                    <img src="../images/ImageP8/Langkah7.png" class="img-fluid rounded my-3 shadow-sm" alt="Model Major">
+
+                    <p><strong>B. Model Student</strong><br>
+                    Melalui eksekusi <code>php artisan make:model Student</code>, model bagi entitas mahasiswa didirikan. Berlawanan dengan <code>Major</code>, model <code>Student</code> mengimplementasikan kebergantungan (relasi ) kepada jurusan melalui metode pengembalian <code>belongsTo(Major::class)</code> yang ditempatkan pada fungsi <code>major()</code>. Untuk menghubungkan relasi silang Many-to-Many ke mata kuliah, dideklarasikan fungsi <code>subjects()</code> yang mengembalikan perintah <code>belongsToMany(Subject::class)</code>.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">protected $fillable = ['nim', 'name', 'address', 'major_id'];
+
+public function major()
+{
+    return $this-&gt;belongsTo(Major::class);
+}
+
+public function subjects()
+{
+    return $this-&gt;belongsToMany(Subject::class);
+}</code></pre>
+</div>
+                    <img src="../images/ImageP8/Langkah8.png" class="img-fluid rounded my-3 shadow-sm" alt="Model Student">
+
+                    <p><strong>C. Model Subject</strong><br>
+                    Sebagai penutup bagian permodelan relasional, dibentuklah kelas <code>Subject</code> lewat <code>php artisan make:model Subject</code>. Mirip dengan model mahasiswa, entitas ini bertindak sebagai persilangan data melalui fungsi <code>students()</code> dengan arahan relasi <code>belongsToMany(Student::class)</code>. Pendekatan ini mendasari konsep di mana sebuah mata kuliah lazimnya diikuti oleh sejumlah mahasiswa yang berbeda.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">protected $fillable = ['name', 'sks'];
+
+public function students()
+{
+    return $this-&gt;belongsToMany(Student::class);
+}</code></pre>
+</div>
+                    <img src="../images/ImageP8/Langkah9.png" class="img-fluid rounded my-3 shadow-sm" alt="Model Subject">
+
+                    <h4 class="fw-bold mt-4">3. Penyiapan Data Awal (Seeding)</h4>
+                    <p>Guna memfasilitasi pengujian alur logika pada sistem, aplikasi membutuhkan sejumlah data bawaan (dummy data) yang dapat dimuat secara masif. Penyuplai data ini dibuat dengan metode Seeding.</p>
+                    
+                    <p>File seeder bagi program studi dan mata kuliah masing-masing dilahirkan melalui instruksi <code>php artisan make:seeder MajorSeeder</code> dan <code>php artisan make:seeder SubjectSeeder</code>. Di dalam fungsi <code>run()</code> pada masing-masing file seeder tersebut, inisialisasi tatanan data diimplementasikan dengan memanfaatkan perulangan atas sekumpulan nilai parameter  sederhana.</p>
+                    <img src="../images/ImageP8/Langkah10.png" class="img-fluid rounded my-3 shadow-sm" alt="Seeder Major">
+                    <img src="../images/ImageP8/Langkah11.png" class="img-fluid rounded my-3 shadow-sm" alt="Seeder Subject">
+                    
+                    <p>Konfigurasi seeder untuk entitas mahasiswa memiliki kompleksitas yang sedikit lebih tinggi. Pada fungsi <code>run()</code> di dalam file <code>StudentSeeder</code>, tidak hanya dilakukan penciptaan rekaman data profil, namun juga penyisipan ikatan dinamis. Untuk mempraktikkan keterhubungan Many-to-Many pada tabel , diaplikasikan perintah kueri <code>Subject::inRandomOrder()-&gt;take(rand(2, 4))-&gt;pluck('id')</code> yang menghasilkan kumpulan 2 hingga 4 identifikasi mata kuliah secara acak. Kumpulan ini seketika diikatkan pada rekaman mahasiswa melalui metode perantara <code>attach()</code>.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">foreach ($students as $studentData) {
+    $student = Student::create($studentData);
+    
+    // Memberikan mata kuliah secara acak
+    $subjects = Subject::inRandomOrder()-&gt;take(rand(2, 4))-&gt;pluck('id');
+    $student-&gt;subjects()-&gt;attach($subjects);
+}</code></pre>
+</div>
+                    <img src="../images/ImageP8/Langkah12.png" class="img-fluid rounded my-3 shadow-sm" alt="Seeder Student">
+                    
+                    <p>Pasca pembuatan tiga elemen seeder tersebut, tahapan aktivasi diurus di dalam file pusat <code>DatabaseSeeder.php</code> dengan mencantumkan nama-nama kelas tersebut ke dalam instrumen pengambil data <code>$this-&gt;call()</code>. Pelaksanaan final pada terminal diselesaikan menggunakan fungsi <code>php artisan db:seed</code>.</p>
+                    <img src="../images/ImageP8/Langkah13.png" class="img-fluid rounded my-3 shadow-sm" alt="Database Seeder">
+                    <img src="../images/ImageP8/Langkah14.png" class="img-fluid rounded my-3 shadow-sm" alt="Jalankan Seeder">
+
+                    <h4 class="fw-bold mt-4">4. Konfigurasi Controller dan Evaluasi Query (Eager Loading)</h4>
+                    <p>Logika bisnis beserta orkestrasi pemrosesan diwadahi ke dalam entitas <code>StudentController</code>. Kelas ini di-generate lewat <code>php artisan make:controller StudentController</code>. Fokus khusus ditempatkan pada teknik pencarian data yang dilangsungkan di dalam fungsi <code>index()</code>.</p>
+                    <p>Secara fungsional, operasi ORM lazim akan menimbulkan gejala kinerja yang lamban ketika objek relasi dipanggil ulang di dalam perulangan HTML, sebuah permasalahan populer bernama . Guna menanggulangi isu tersebut, fungsi pemuatan lebih awal (Eager Loading) dirangkum bersamaan pada saat pengambilan kumpulan data mahasiswa melalui tambahan prosedur kueri <code>with(['major', 'subjects'])</code>. Dengan konstruksi ini, beban jumlah perintah basis data dieksekusi secara drastis jauh lebih sedikit.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">public function index()
+{
+    // Mencegah N+1 problem dengan pemuatan awal (eager loading)
+    $students = Student::with(['major', 'subjects'])-&gt;get();
+    return view('students.index', compact('students'));
+}</code></pre>
+</div>
+                    <img src="../images/ImageP8/Langkah15.png" class="img-fluid rounded my-3 shadow-sm" alt="Controller Index">
+
+                    <p>Di bagian fungsional penambahan (Store) dan pembaharuan (Update) catatan rekam data, sinkronisasi tautan relasi multi-arah (many-to-many) tidak boleh dilakukan dengan metode tradisional. Penyisipan kaitan baru diarahkan lewat perintah <code>$student-&gt;subjects()-&gt;attach()</code>, sedangkan pada saat pembaharuan dianjurkan memakai utilitas canggih bawaan Laravel yaitu <code>$student-&gt;subjects()-&gt;sync()</code> yang secara otonom membandingkan, membersihkan, hingga menyimpan pembaruan identifikasi tanpa harus melakukan penyisiran ulang manual.</p>
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">public function store(Request $request)
+{
+    // (Validasi input dihilangkan untuk abstraksi baca)
+    $student = Student::create($request-&gt;only(['nim', 'name', 'address', 'major_id']));
+    $student-&gt;subjects()-&gt;attach($request-&gt;subjects);
+    // ...
+}
+
+public function update(Request $request, $id)
+{
+    $student = Student::findOrFail($id);
+    $student-&gt;update($request-&gt;only(['nim', 'name', 'address', 'major_id']));
+    $student-&gt;subjects()-&gt;sync($request-&gt;subjects);
+    // ...
+}</code></pre>
+</div>
+                    <img src="../images/ImageP8/Langkah15A.png" class="img-fluid rounded my-3 shadow-sm" alt="Controller Update">
+
+                    <h4 class="fw-bold mt-4">5. Pengaturan Rute dan Perancangan Antarmuka (Views)</h4>
+                    <p>Guna memudahkan alur lalu lintas pengaksesan perutean antar alamat, maka mekanisme delegasi alamat bagi <code>StudentController</code> dilakukan secara ringkas melalui penggunaan registrasi <code>Route::resource()</code>. Prosedur penulisan yang bersandar pada  ini mengalokasikan ketujuh standar method aksi CRUD secara simultan ke dalam sistem aplikasi tanpa mengganggu kerumitan berkas utama <code>web.php</code>.</p>
+                    <img src="../images/ImageP8/Langkah16.png" class="img-fluid rounded my-3 shadow-sm" alt="Routes">
+
+                    <p>Untuk menyederhanakan arsitektur lapis penyajian HTML pada proyek berbasis Blade Templating Engine, dibentuk file penyusun dasar perwajah-an sistem, yaitu <code>app.blade.php</code> di subdirektori pandangan. Dokumen ini bertindak mengasimilasikan struktur navigasi baku serta memusatkan panggilan terhadap pustaka gaya  (CSS) Bootstrap yang dimuat secara daring.</p>
+                    <img src="../images/ImageP8/Langkah17.png" class="img-fluid rounded my-3 shadow-sm" alt="Layout View">
+
+                    <p>Dari  tersebut, fungsi perluasan (inheritance) <code>@extends('layouts.app')</code> diturunkan kepada file penyusun tabel rincian daftar mahasiswa pada antarmuka <code>index.blade.php</code>. Tampilan daftar mata kuliah disemai dalam pengulangan <code>@foreach</code>. Untuk mengambil keluaran yang terikat melalui relasi,  sekadar mencantumkan  yang sangat mudah dipahami, semisal <code>$student-&gt;major-&gt;name</code> dan eksekusi instan <code>$student-&gt;subjects-&gt;sum('sks')</code> untuk menyimpulkan besaran beban akademis SKS.</p>
+                    <img src="../images/ImageP8/Langkah18.png" class="img-fluid rounded my-3 shadow-sm" alt="Index View Code">
+                    <img src="../images/ImageP8/TampilanIndex.png" class="img-fluid rounded my-3 shadow-sm" alt="Tampilan Index">
+
+                    <p>Selanjutnya, pendirian rancangan panel isian pengguna direntangkan dalam wujud halaman tambahan yaitu <code>create.blade.php</code>. Berkenaan relasi majemuk, pilihan jurusan yang bersifat singular dihadirkan pada konfigurasi tag seleksi tunggal (<code>&lt;select&gt;</code>). Di samping itu, agar pilihan mata kuliah Many-to-Many dapat terangkum secara struktur larik  di balik layar form (HTML Payload), diadaptasikan format penamaan berkurung siku pada masukan kotak centang <code>&lt;input type="checkbox" name="subjects[]"&gt;</code>.</p>
+                    <img src="../images/ImageP8/Langkah19.png" class="img-fluid rounded my-3 shadow-sm" alt="Create View Code">
+                    <img src="../images/ImageP8/TampilanCreate.png" class="img-fluid rounded my-3 shadow-sm" alt="Tampilan Create">
+
+                    <h2 class="fw-bold mt-5 mb-4 border-bottom pb-2">Latihan dan Tugas: Query dengan Relationship</h2>
+                    <p>Pada sub-bagian akhir pelaksanaan praktikum, diberikan penugasan guna menguji pemahaman terhadap fitur Query Builder serta pemanfaatan hubungan fungsional (relationship) yang disediakan oleh Eloquent. Dibuat sebuah kelas pengontrol tambahan dan sistem rute untuk menyajikan hasil analisis data secara terstruktur.</p>
+
+                    <h4 class="fw-bold mt-4">Penyusunan Logika Pengambilan Data (Query)</h4>
+                    <p>Setiap sub-pertanyaan diselesaikan dengan konstruksi pemanggilan spesifik yang dituliskan di dalam kelas pengontrol (Controller).</p>
+                    <ol class="lh-lg">
+                        <li><strong>Semua mahasiswa beserta jurusan dan mata kuliahnya:</strong> Diselesaikan menggunakan peritah eager loading <code>Student::with(['major', 'subjects'])-&gt;get()</code>. Pemanggilan relasional di depan berguna untuk mempercepat eksekusi.</li>
+                        <li><strong>Jurusan dengan mahasiswa terbanyak:</strong> Diimplementasikan pemanfaatan agregat kueri <code>withCount('students')</code> pada entitas <code>Major</code>. Hasilnya kemudian diurutkan dari jumlah terbesar menggunakan pemanggilan <code>orderByDesc('students_count')-&gt;first()</code> guna memperoleh satu data tertinggi.</li>
+                        <li><strong>Mata kuliah yang diambil mahasiswa tertentu:</strong> Pendefinisian spesifik diterapkan dengan memanggil instansi tunggal mahasiswa menggunakan fungsi <code>find()</code>, yang kemudian dirangkaikan dengan akses relasional <code>$student-&gt;subjects</code>.</li>
+                        <li><strong>Total SKS yang diambil mahasiswa:</strong> Penyelesaian dilakukan tanpa operasi kueri kompleks. Melalui agregasi Collection Laravel yang bekerja di tingkat memori, dilakukan pemanggilan fungsi perulangan <code>sum('sks')</code> pada properti dinamis objek <code>subjects</code> milik masing-masing mahasiswa.</li>
+                    </ol>
+
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-php">class LatihanController extends Controller
+{
+    public function index()
+    {
+        // 1. Semua mahasiswa beserta jurusan dan mata kuliahnya
+        $allStudents = Student::with(['major', 'subjects'])-&gt;get();
+
+        // 2. Jurusan yang memiliki mahasiswa terbanyak
+        $topMajor = Major::withCount('students')
+                        -&gt;orderByDesc('students_count')
+                        -&gt;first();
+
+        // 3. Mata kuliah yang diambil oleh mahasiswa tertentu (contoh ID: 1)
+        $specificStudent = Student::with('subjects')-&gt;find(1);
+
+        // 4. Total SKS dikelola langsung pada tampilan (View) menggunakan $student-&gt;subjects-&gt;sum('sks')
+        
+        return view('latihan.index', compact('allStudents', 'topMajor', 'specificStudent'));
+    }
+}</code></pre>
+</div>
+                    <img src="../images/ImageP8/LatihanTugas.png" class="img-fluid rounded my-3 shadow-sm" alt="Logika Latihan">
+                    <img src="../images/ImageP8/LatihanTugas2.png" class="img-fluid rounded my-3 shadow-sm" alt="Penempatan Rute Latihan">
+
+                    <h4 class="fw-bold mt-4">Penyusunan Antarmuka (View) Latihan</h4>
+                    <p>Setelah fungsi pengambilan data selesai dibuat, langkah selanjutnya adalah menampilkan kumpulan data tersebut ke layar pengguna (View). Halaman ini dibuat di dalam file <code>latihan.blade.php</code> dengan menggunakan elemen <i>grid</i> dan komponen <i>card</i> bawaan dari Bootstrap agar penyajian informasinya terstruktur dengan rapi.</p>
+                    <p>Pada file tampilan ini, struktur dasar HTML diwariskan dari layout utama menggunakan arahan <code>@extends('layouts.app')</code>. Halaman kemudian dibagi menjadi dua sisi menggunakan elemen grid <code>col-lg-4</code> dan <code>col-lg-8</code>. Di setiap blok <i>card</i>, dilakukan pengecekan data terlebih dahulu menggunakan arahan <code>@if</code>, contohnya <code>@if($popularMajor)</code> dan <code>@if($specificStudent)</code>. Fungsi ini berguna untuk memastikan bahwa aplikasi tidak akan mengalami <i>error</i> apabila data di dalam database kosong.</p>
+                    <p>Sementara itu, untuk menampilkan data yang berbentuk kumpulan larik (koleksi), seperti daftar seluruh mahasiswa maupun daftar mata kuliah pada mahasiswa tertentu, diterapkan perulangan <code>@foreach($students as $student)</code>. Di dalam perulangan tersebut, akses pemanggilan relasi antar entitas, seperti pencetakan nama jurusan dari seorang mahasiswa, langsung dipanggil melalui objek properti yang saling terkait, yaitu <code>{{ $student-&gt;major-&gt;name }}</code>.</p>
+
+<div class="bg-dark text-light p-3 rounded-3 my-3 overflow-auto">
+<pre><code class="language-html">@extends ('layouts.app')
+
+@section('content')
+&lt;div class="container py-2"&gt;
+    &lt;div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3"&gt;
+        &lt;div&gt;
+            &lt;h1 class="h2 text-dark fw-bold"&gt;Penyelesaian Latihan Modul Relationship&lt;/h1&gt;
+            &lt;p class="text-muted mb-0"&gt;Kumpulan hasil eksekusi query Eloquent untuk Latihan 1 (Soal 1 - 4)&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="row g-4"&gt;
+        &lt;div class="col-lg-4"&gt;
+            &lt;div class="card shadow-sm border-0 mb-4"&gt;
+                &lt;div class="card-header bg-primary text-white fw-bold py-3"&gt;
+                    Soal 2: Jurusan Terbanyak
+                &lt;/div&gt;
+                &lt;div class="card-body"&gt;
+                    &lt;p class="text-muted small mb-2"&gt;Jurusan dengan jumlah akumulasi mahasiswa paling banyak saat ini:&lt;/p&gt;
+                    @if($popularMajor)
+                        &lt;h5 class="card-title fw-bold text-primary mb-2"&gt;{{ $popularMajor-&gt;name }}&lt;/h5&gt;
+                        &lt;p class="card-text mb-0"&gt;
+                            &lt;span class="badge bg-success px-3 py-2 fs-6"&gt;{{ $popularMajor-&gt;students_count }} Mahasiswa&lt;/span&gt;
+                        &lt;/p&gt;
+                    @else
+                        &lt;div class="alert alert-warning mb-0 py-2"&gt;Data jurusan tidak ditemukan.&lt;/div&gt;
+                    @endif
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class="card shadow-sm border-0"&gt;
+                &lt;div class="card-header bg-info text-white fw-bold py-3"&gt;
+                    Soal 3: Mata Kuliah Mahasiswa Tertentu
+                &lt;/div&gt;
+                &lt;div class="card-body"&gt;
+                    @if($specificStudent)
+                        &lt;div class="mb-3 border-bottom pb-2"&gt;
+                            &lt;span class="text-muted small d-block"&gt;Nama Mahasiswa:&lt;/span&gt;
+                            &lt;strong class="text-dark fs-5"&gt;{{ $specificStudent-&gt;name }}&lt;/strong&gt;
+                            &lt;span class="text-muted d-block small"&gt;NIM: {{ $specificStudent-&gt;nim }}&lt;/span&gt;
+                        &lt;/div&gt;
+                        &lt;h6 class="fw-bold text-secondary mb-2"&gt;Daftar Mata Kuliah Diambil:&lt;/h6&gt;
+                        &lt;ul class="list-group list-group-flush"&gt;
+                            @foreach($specificStudent-&gt;subjects as $subject)
+                                &lt;li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2"&gt;
+                                    &lt;span&gt;{{ $subject-&gt;name }}&lt;/span&gt;
+                                    &lt;span class="badge bg-secondary rounded-pill"&gt;{{ $subject-&gt;sks }} SKS&lt;/span&gt;
+                                &lt;/li&gt;
+                            @endforeach
+                        &lt;/ul&gt;
+                    @else
+                        &lt;div class="alert alert-danger mb-0 py-2"&gt;Data mahasiswa tidak ditemukan.&lt;/div&gt;
+                    @endif
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class="col-lg-8"&gt;
+            &lt;div class="card shadow-sm border-0 mb-4"&gt;
+                &lt;div class="card-header bg-dark text-white fw-bold py-3"&gt;
+                    Soal 1: Semua Mahasiswa Beserta Jurusan &amp; Mata Kuliah
+                &lt;/div&gt;
+                &lt;div class="card-body p-0"&gt;
+                    &lt;div class="table-responsive"&gt;
+                        &lt;table class="table table-hover align-middle mb-0"&gt;
+                            &lt;thead class="table-light"&gt;
+                                &lt;tr&gt;
+                                    &lt;th class="ps-3" style="width: 20%;"&gt;NIM&lt;/th&gt;
+                                    &lt;th style="width: 25%;"&gt;Nama&lt;/th&gt;
+                                    &lt;th style="width: 25%;"&gt;Jurusan&lt;/th&gt;
+                                    &lt;th class="pe-3" style="width: 30%;"&gt;Mata Kuliah&lt;/th&gt;
+                                &lt;/tr&gt;
+                            &lt;/thead&gt;
+                            &lt;tbody&gt;
+                                @foreach($students as $student)
+                                &lt;tr&gt;
+                                    &lt;td class="ps-3 fw-bold text-secondary"&gt;{{ $student-&gt;nim }}&lt;/td&gt;
+                                    &lt;td class="fw-semibold text-dark"&gt;{{ $student-&gt;name }}&lt;/td&gt;
+                                    &lt;td&gt;{{ $student-&gt;major-&gt;name }}&lt;/td&gt;
+                                    &lt;td class="pe-3"&gt;
+                                        @foreach($student-&gt;subjects as $subject)
+                                            &lt;span class="badge bg-light text-dark border me-1 mb-1"&gt;{{ $subject-&gt;name }}&lt;/span&gt;
+                                        @endforeach
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+                                @endforeach
+                            &lt;/tbody&gt;
+                        &lt;/table&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class="card shadow-sm border-0"&gt;
+                &lt;div class="card-header bg-success text-white fw-bold py-3"&gt;
+                    Soal 4: Total SKS yang Diambil Setiap Mahasiswa
+                &lt;/div&gt;
+                &lt;div class="card-body p-0"&gt;
+                    &lt;div class="table-responsive"&gt;
+                        &lt;table class="table table-striped table-hover align-middle mb-0"&gt;
+                            &lt;thead class="table-light"&gt;
+                                &lt;tr&gt;
+                                    &lt;th class="ps-3"&gt;NIM&lt;/th&gt;
+                                    &lt;th&gt;Nama Mahasiswa&lt;/th&gt;
+                                    &lt;th class="pe-3 text-end"&gt;Total Beban SKS&lt;/th&gt;
+                                &lt;/tr&gt;
+                            &lt;/thead&gt;
+                            &lt;tbody&gt;
+                                @foreach($students as $student)
+                                &lt;tr&gt;
+                                    &lt;td class="ps-3 text-secondary"&gt;{{ $student-&gt;nim }}&lt;/td&gt;
+                                    &lt;td class="fw-semibold text-dark"&gt;{{ $student-&gt;name }}&lt;/td&gt;
+                                    &lt;td class="pe-3 text-end fw-bold text-success"&gt;
+                                        {{ $student-&gt;subjects-&gt;sum('sks') }} SKS
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+                                @endforeach
+                            &lt;/tbody&gt;
+                        &lt;/table&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+@endsection</code></pre>
+</div>
+                    <p>Hasil akhir dari penulisan kode di atas akan menampilkan halaman yang merangkum seluruh hasil kueri sesuai dengan tugas yang diberikan.</p>
+                    <img src="../images/ImageP8/TampilanLatihan.png" class="img-fluid rounded my-3 shadow-sm" alt="Tampilan Latihan">
+
+
+                    <h2 class="fw-bold mt-5 mb-4 border-bottom pb-2">Kesimpulan</h2>
+                    <p>Berdasarkan prosedur yang telah dilalui pada modul Laravel Relationship, dapat ditarik kesimpulan bahwa kerangka kerja ini memberikan kapabilitas pengelolaan struktur tabel yang sangat mapan. Penggunaan Eloquent ORM telah secara nyata memudahkan implementasi pemetaan relasi data, mulai dari tipe One-to-Many hingga bentuk yang lebih kompleks seperti Many-to-Many yang memerlukan bantuan tabel perantara (pivot table).</p>
+                    <p>Selain pemetaan relasi antar tabel, penerapan praktik terbaik (best practices) seperti <em>Eager Loading</em> terbukti mampu meningkatkan efisiensi dan mengurangi beban lalu lintas kueri ke basis data secara signifikan. Keseluruhan tahapan ini, dimulai dari pembuatan migrasi hingga pengaksesan properti relasional di dalam file tampilan (View), mengukuhkan bahwa relasi data adalah pondasi fundamental yang harus dikuasai guna membangun arsitektur perangkat lunak yang kohesif, terukur, serta terhindar dari inkonsistensi pertukaran data.</p>
+
+                    <div class="mt-5 p-4 bg-dark text-light rounded-4 shadow border border-secondary">
+                        <h4 class="fw-bold mb-3"><i class="bi bi-github me-2"></i>Repository Praktikum</h4>
+                        <p class="mb-2">Kode sumber dan file konfigurasi dari praktikum ini dapat diakses pada repositori GitHub berikut:</p>
+                        <a href="https://github.com/DaffaAiraAdrn/PemogramanWeb_2411531006/tree/main" target="_blank" class="text-info text-decoration-none fw-semibold fs-5">
+                            https://github.com/DaffaAiraAdrn/PemogramanWeb_2411531006/tree/main
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+    <footer class="footer-section container-fluid mt-5 py-5">
+        <hr class="border-secondary mb-4">
+        <div class="row text-light px-3">
+            <div class="col-12 col-md-4 col-lg-4 mb-4 text-md-start text-center">
+                <h5 class="fw-bold mb-3">Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="../index.html" class="text-light text-decoration-none">Home</a></li>
+                    <li><a href="../about.html" class="text-light text-decoration-none">About</a></li>
+                    <li><a href="../portfolio.html" class="text-light text-decoration-none">Portfolio</a></li>
+                    <li><a href="../contact.html" class="text-light text-decoration-none">Contact</a></li>
+                    <li><a href="../blog.html" class="text-light text-decoration-none">Blog</a></li>
+                </ul>
+            </div>
+            <div class="col-12 col-md-4 col-lg-4 mb-4 text-center">
+                <h4 class="fw-bold">Daffa Aira Adrin</h4>
+                <div class="mt-3">
+                    <a href="https://github.com/DaffaAiraAdrn" target="_blank" class="text-light fs-3 me-3">
+                        <i class="bi bi-github"></i>
+                    </a>
+                    <a href="https://youtube.com/@360hz4" target="_blank" class="text-light fs-3 me-3">
+                        <i class="bi bi-youtube"></i>
+                    </a>
+                    <a href="https://instagram.com/df__137" target="_blank" class="text-light fs-3 me-3">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a href="mailto:2411531006_daffa@unand.ac.id" target="_blank" class="text-light fs-3">
+                        <i class="bi bi-envelope"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 col-lg-4 mb-4 text-md-end text-center">
+                <h5 class="fw-bold mb-3">About</h5>
+                <p class="small">
+                    I am Daffa Aira Adrin, an Informatics student passionate about 3D Modeling,
+                    Machine Learning, and Programming.  
+                    This website is where I share my projects, skills, and ideas.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <span class="text-light lead d-block mt-4">
+                    © 2026 DaffaAiraAdrin. All rights reserved.
+                </span>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.addEventListener("load", () => {
+            document.body.classList.add("page-loaded");
+        });
+    </script>
+
+</body>
+</html>
