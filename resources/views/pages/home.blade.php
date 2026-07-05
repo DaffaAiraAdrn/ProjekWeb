@@ -13,7 +13,7 @@
     </div>
     <div class="grid-pattern"></div>
     <div class="hero-content">
-        <p class="hero-greeting" id="heroGreeting">Welcome to my universe</p>
+        <p class="hero-greeting" id="heroGreeting">Where Creativity Meets Technology welcome to my little sandbox</p>
         <h1 class="hero-name" id="heroName">
             <span class="gradient-text">{{ $settings['hero_title'] ?? 'Daffa Aira Adrin' }}</span>
         </h1>
