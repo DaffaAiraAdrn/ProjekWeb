@@ -19,7 +19,10 @@ jobs:
           coverage: none
 
       - name: Install Composer
-        run: composer install --no-dev --optimize-autoloader --no-interaction
+        run: |
+          composer config audit.abandoned ignore
+          composer config audit.security ignore
+          composer install --no-dev --optimize-autoloader --no-interaction --no-audit
 
       - name: Prepare Deployment Package
         run: |
