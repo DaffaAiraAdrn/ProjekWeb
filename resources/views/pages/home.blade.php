@@ -13,16 +13,13 @@
     </div>
     <div class="grid-pattern"></div>
     <div class="hero-content">
-        <p class="hero-greeting" id="heroGreeting">Where Creativity Meets Technology welcome to my little sandbox</p>
+        <p class="hero-greeting" id="heroGreeting">Welcome to my universe</p>
         <h1 class="hero-name" id="heroName">
             <span class="gradient-text">{{ $settings['hero_title'] ?? 'Daffa Aira Adrin' }}</span>
         </h1>
         <p class="hero-subtitle" id="heroSubtitle">
-            <span>3D Artist</span>
-            <span class="accent-dot">•</span>
-            <span>ML Engineer</span>
-            <span class="accent-dot">•</span>
-            <span>Developer</span>
+            <span style="display: block; margin-bottom: 12px; font-size: clamp(1.1rem, 2.5vw, 1.5rem); font-weight: 500; color: var(--text);">Where Creativity Meets Technology • Welcome to My Little Sandbox</span>
+            <span style="font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);">3D Artist • ML Engineer • Developer</span>
         </p>
         <div class="hero-cta" id="heroCta">
             <a href="{{ route('portfolio.index') }}" class="btn btn-primary">View Portfolio</a>
