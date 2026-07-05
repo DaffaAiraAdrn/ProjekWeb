@@ -132,7 +132,7 @@
 
     <div class="featured-grid">
         @php
-            $featured = $portfolios->where('is_featured', true)->take(3);
+            $featured = $portfolios->where('featured', true)->take(3);
             if($featured->isEmpty()) { $featured = $portfolios->take(3); }
         @endphp
         @forelse($featured as $project)

@@ -5,7 +5,7 @@
 @section('content')
 
 @php
-    $featuredPost = $posts->where('is_featured', true)->first() ?? $posts->first();
+    $featuredPost = $posts->where('featured', true)->first() ?? $posts->first();
     $otherPosts = $posts->filter(function($p) use ($featuredPost) { return $p->id !== ($featuredPost->id ?? null); });
 @endphp
 
