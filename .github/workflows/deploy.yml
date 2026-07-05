@@ -23,12 +23,12 @@ jobs:
 
       - name: Prepare Deployment Package
         run: |
-          # Remove development files that should not be deployed
-          rm -rf .git .github tests node_modules .env.example
           # Create .env from example for production if .env doesn't exist
           if [ ! -f .env ]; then
             cp .env.example .env
           fi
+          # Remove development files that should not be deployed
+          rm -rf .git .github tests node_modules .env.example
           # Optimize Laravel for production
           php artisan key:generate --force
           php artisan config:cache
