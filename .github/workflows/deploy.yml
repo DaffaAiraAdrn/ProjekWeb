@@ -19,7 +19,7 @@ jobs:
           coverage: none
 
       - name: Install Composer
-        run: composer install --no-dev --optimize-autoloader --no-interaction --no-audit
+        run: composer install --no-dev --optimize-autoloader --no-interaction --no-security-blocking
 
       - name: Prepare Deployment Package
         run: |
