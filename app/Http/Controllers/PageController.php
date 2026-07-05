@@ -13,11 +13,11 @@ class PageController extends Controller
     public function home()
     {
         $settings = SiteSetting::getAll();
-        $featuredPortfolios = Portfolio::where('featured', true)->orderBy('order')->take(6)->get();
+        $portfolios = Portfolio::where('featured', true)->orderBy('order')->take(6)->get();
         $latestPosts = BlogPost::published()->latest('published_at')->take(3)->get();
         $latestReports = Report::published()->latest('published_at')->take(3)->get();
 
-        return view('pages.home', compact('settings', 'featuredPortfolios', 'latestPosts', 'latestReports'));
+        return view('pages.home', compact('settings', 'portfolios', 'latestPosts', 'latestReports'));
     }
 
     public function about()
