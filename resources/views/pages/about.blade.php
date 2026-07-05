@@ -12,7 +12,7 @@
     <div class="about-profile-card reveal reveal-left">
         <div class="about-profile-card-inner" id="profileCard">
             <div class="about-profile-image">
-                <img src="{{ $settings['profile_image'] ? asset('storage/' . $settings['profile_image']) : 'https://via.placeholder.com/500x500/2b0057/C7A6FF?text=DF_137' }}" alt="Daffa Aira Adrin">
+                <img src="{{ ($settings['profile_image'] ?? null) ? asset('storage/' . $settings['profile_image']) : 'https://via.placeholder.com/500x500/2b0057/C7A6FF?text=DF_137' }}" alt="Daffa Aira Adrin">
             </div>
         </div>
     </div>
