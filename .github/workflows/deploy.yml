@@ -23,32 +23,31 @@ jobs:
 
       - name: Prepare Deployment Package
         run: |
-          # Create .env from example for production if .env doesn't exist
+          # 1) Create staging deploy folder
+          mkdir -p deploy
+          # 2) Create .env from example for production if .env doesn't exist
           if [ ! -f .env ]; then
             cp .env.example .env
           fi
-          # Remove development files that should not be deployed
-          rm -rf .git .github tests node_modules .env.example
-          # Optimize Laravel for production
+          # 3) Optimize Laravel for production
           php artisan key:generate --force
           php artisan config:cache
           php artisan route:cache
           php artisan view:cache
-          # Create storage symlink
+          # 4) Create storage symlink
           php artisan storage:link --force
+          # 5) Pack all files into a single zip (excluding development tools and .env so we don't overwrite server env)
+          zip -r deploy/release.zip . -x ".git/*" ".github/*" "tests/*" "node_modules/*" ".env" ".env.example" "deploy/*" "*.md"
+          # 6) Copy extract.php script to public/ folder inside zip or staging
+          mkdir -p deploy/public
+          cp public/extract.php deploy/public/extract.php
 
-      - name: Sync Files to Hostinger via FTP
+      - name: Sync ZIP and Extractor to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: /public_html/
-          exclude: |
-            .git*
-            .github/
-            tests/
-            node_modules/
-            *.md
-            .env.example
+          local-dir: ./deploy/
+          server-dir: ${{ secrets.FTP_APP_DIR || '/public_html/' }}
+          dangerous-clean-slate: false
