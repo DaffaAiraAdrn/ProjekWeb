@@ -126,51 +126,7 @@
     {{-- Scripts --}}
     <script src="{{ asset('js/three-scene.js') }}" defer></script>
     <script src="{{ asset('js/main.js') }}" defer></script>
-    {{-- Temporary Visual Debugger for Mobile Overflow (Will highlight overflowing elements in red outline) --}}
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-            const overflowElements = [];
-            document.querySelectorAll('*').forEach(el => {
-                // Ignore elements that are not visible to the user
-                const style = window.getComputedStyle(el);
-                if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
-                    return;
-                }
-                const rect = el.getBoundingClientRect();
-                if (rect.right > window.innerWidth + 1 || rect.left < -1) {
-                    el.style.outline = '2px dashed red';
-                    el.style.outlineOffset = '-2px';
-                    let elDesc = el.tagName.toLowerCase();
-                    if (el.id) elDesc += '#' + el.id;
-                    if (el.className) elDesc += '.' + Array.from(el.classList).join('.');
-                    overflowElements.push(elDesc);
-                }
-            });
-            if (overflowElements.length > 0) {
-                const debugDiv = document.createElement('div');
-                debugDiv.style.position = 'fixed';
-                debugDiv.style.top = '10px';
-                debugDiv.style.left = '10px';
-                debugDiv.style.background = 'rgba(239, 68, 68, 0.95)';
-                debugDiv.style.color = '#fff';
-                debugDiv.style.padding = '12px';
-                debugDiv.style.borderRadius = '8px';
-                debugDiv.style.zIndex = '999999';
-                debugDiv.style.fontSize = '11px';
-                debugDiv.style.fontFamily = 'monospace';
-                debugDiv.style.maxHeight = '250px';
-                debugDiv.style.maxWidth = '300px';
-                debugDiv.style.overflowY = 'auto';
-                debugDiv.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
-                debugDiv.style.border = '1px solid rgba(255,255,255,0.2)';
-                debugDiv.innerHTML = '<b>⚠️ Overflow Elements (Red Outline):</b><br><ol style="margin-left:15px;margin-top:5px;">' + 
-                    [...new Set(overflowElements)].map(el => '<li>' + el + '</li>').join('') + '</ol>';
-                document.body.appendChild(debugDiv);
-            }
-        }, 1200);
-    });
-    </script>
+
 
     @yield('scripts')
 </body>
