@@ -36,9 +36,6 @@ jobs:
           php artisan storage:link --force
           # 5) Pack all files into a single zip (excluding development tools and .env so we don't overwrite server env)
           zip -r deploy/release.zip . -x ".git/*" ".github/*" "tests/*" "node_modules/*" ".env" ".env.example" "deploy/*" "*.md"
-          # 6) Copy extract.php script to public/ folder inside zip or staging
-          mkdir -p deploy/public
-          cp public/extract.php deploy/public/extract.php
 
       - name: Sync ZIP and Extractor to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
