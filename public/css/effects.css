@@ -716,3 +716,10 @@
         clip-path: none !important;
     }
 }
+
+/* Hide decorative parallax orbs on mobile to prevent overflow & lag */
+@media (max-width: 768px) {
+    .parallax-orb {
+        display: none !important;
+    }
+}

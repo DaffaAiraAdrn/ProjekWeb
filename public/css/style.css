@@ -352,9 +352,10 @@ input, textarea, select { font-family: inherit; }
         -webkit-backdrop-filter: blur(var(--glass-blur));
         border-left: 1px solid var(--glass-border);
         transform: translateX(100%);
-        transition: transform var(--transition);
+        visibility: hidden;
+        transition: transform var(--transition), visibility var(--transition);
     }
-    .nav-links.open { transform: translateX(0); }
+    .nav-links.open { transform: translateX(0); visibility: visible; }
     .nav-link { font-size: 1.1rem; padding: 12px 24px; }
 }
 

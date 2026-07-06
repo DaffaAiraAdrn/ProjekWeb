@@ -15,8 +15,8 @@
         <p>Have a project in mind, a collaboration idea, or just want to say hello? I'm always open to discussing new opportunities and creative ventures. Drop me a message and I'll get back to you soon.</p>
 
         <div style="margin-bottom:32px;">
-            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-                <div class="contact-social-link" style="width:40px;height:40px;">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+                <div class="contact-social-link" style="width:40px;height:40px;flex-shrink:0;">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
                 </div>
                 <a href="mailto:2411531006_daffa@unand.ac.id" style="color:var(--text-muted);font-size:0.9rem;word-break:break-all;">2411531006_daffa@unand.ac.id</a>

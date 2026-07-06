@@ -29,8 +29,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 
     {{-- Stylesheets --}}
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/effects.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
     {{-- Three.js --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
