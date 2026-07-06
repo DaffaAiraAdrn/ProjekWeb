@@ -43,8 +43,8 @@
     <div class="contact-form-wrapper reveal reveal-right" id="contactFormWrapper">
         <form class="contact-form" id="contactForm" method="POST" action="{{ route('contact.store') }}">
             @csrf
-            <div class="form-message success" id="formSuccess">Your message has been sent successfully. I'll get back to you soon!</div>
-            <div class="form-message error" id="formError">Something went wrong. Please try again or email me directly.</div>
+            <div class="form-message success" id="formSuccess" style="display: none;">Your message has been sent successfully. I'll get back to you soon!</div>
+            <div class="form-message error" id="formError" style="display: none;">Something went wrong. Please try again or email me directly.</div>
 
             <div class="form-group">
                 <label for="name">Your Name</label>
