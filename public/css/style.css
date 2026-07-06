@@ -1052,6 +1052,7 @@ input, textarea, select { font-family: inherit; }
     display: flex;
     align-items: center;
     justify-content: center;
+    background: var(--gradient-1);
 }
 
 .portfolio-detail-hero img {
@@ -1363,6 +1364,7 @@ input, textarea, select { font-family: inherit; }
     display: flex;
     align-items: center;
     justify-content: center;
+    background: var(--gradient-1);
 }
 
 .blog-detail-hero img {
