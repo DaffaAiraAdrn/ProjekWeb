@@ -9,9 +9,9 @@
 {{-- Hero with Parallax --}}
 <section class="blog-detail-hero" id="blogHero">
     @if($post->featured_image)
-        <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" id="parallaxImg">
+        <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" id="parallaxImg" onerror="this.style.display='none'">
     @else
-        <img src="https://via.placeholder.com/1920x1080/2b0057/C7A6FF?text={{ urlencode($post->title) }}" alt="{{ $post->title }}" id="parallaxImg">
+        <img src="https://via.placeholder.com/1920x1080/2b0057/C7A6FF?text={{ urlencode($post->title) }}" alt="{{ $post->title }}" id="parallaxImg" onerror="this.style.display='none'">
     @endif
     <div class="blog-detail-hero-content reveal reveal-up">
         <span class="section-label">{{ $post->category ?? 'Article' }}</span>

@@ -7,9 +7,9 @@
 {{-- Hero with Parallax --}}
 <section class="portfolio-detail-hero" id="detailHero">
     @if($portfolio->featured_image)
-        <img src="{{ asset('storage/' . $portfolio->featured_image) }}" alt="{{ $portfolio->title }}" id="parallaxImg">
+        <img src="{{ asset('storage/' . $portfolio->featured_image) }}" alt="{{ $portfolio->title }}" id="parallaxImg" onerror="this.style.display='none'">
     @else
-        <img src="https://via.placeholder.com/1920x1080/2b0057/C7A6FF?text={{ urlencode($portfolio->title) }}" alt="{{ $portfolio->title }}" id="parallaxImg">
+        <img src="https://via.placeholder.com/1920x1080/2b0057/C7A6FF?text={{ urlencode($portfolio->title) }}" alt="{{ $portfolio->title }}" id="parallaxImg" onerror="this.style.display='none'">
     @endif
     <div class="portfolio-detail-hero-content reveal reveal-up">
         <span class="section-label">{{ strtoupper($portfolio->category) }}</span>
