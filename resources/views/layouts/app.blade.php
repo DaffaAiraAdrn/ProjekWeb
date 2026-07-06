@@ -29,8 +29,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 
     {{-- Stylesheets --}}
-    <link rel="stylesheet" href="{{ asset('css/effects.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/effects.css') }}?v=1.2">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}?v=1.2">
 
     {{-- Three.js --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -132,6 +132,11 @@
         setTimeout(() => {
             const overflowElements = [];
             document.querySelectorAll('*').forEach(el => {
+                // Ignore elements that are not visible to the user
+                const style = window.getComputedStyle(el);
+                if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
+                    return;
+                }
                 const rect = el.getBoundingClientRect();
                 if (rect.right > window.innerWidth + 1 || rect.left < -1) {
                     el.style.outline = '2px dashed red';

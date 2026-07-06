@@ -2118,8 +2118,8 @@ input, textarea, select { font-family: inherit; }
     .login-card { padding: 24px; }
     .footer { padding: 60px 20px 32px; }
     
-    /* Hide decorative parallax orbs to prevent mobile horizontal overflow & lag */
-    .parallax-orb { display: none !important; }
+    /* Hide decorative parallax orbs & footer glow to prevent mobile horizontal overflow & lag */
+    .parallax-orb, .footer-glow { display: none !important; }
     
     /* Fix Timeline Grid Layout on mobile */
     .timeline::before { left: 20px; transform: none; }
