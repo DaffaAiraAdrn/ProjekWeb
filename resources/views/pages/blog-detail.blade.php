@@ -32,9 +32,15 @@
 
     @if($post->tags)
         <div class="blog-tags reveal reveal-up">
-            @foreach(explode(',', $post->tags) as $tag)
-                <span class="blog-tag">{{ trim($tag) }}</span>
-            @endforeach
+            @if(is_array($post->tags))
+                @foreach($post->tags as $tag)
+                    <span class="blog-tag">{{ trim($tag) }}</span>
+                @endforeach
+            @elseif(is_string($post->tags))
+                @foreach(explode(',', $post->tags) as $tag)
+                    <span class="blog-tag">{{ trim($tag) }}</span>
+                @endforeach
+            @endif
         </div>
     @endif
 
