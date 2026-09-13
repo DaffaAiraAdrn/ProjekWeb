@@ -45,4 +45,12 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./deploy/
           server-dir: ${{ secrets.FTP_APP_DIR || '/public_html/' }}
+          # The default manifest (.ftp-deploy-sync-state.json) left in
+          # /public_html/ belongs to an older Next.js deploy. The action reads it,
+          # sees a .next folder that is no longer there, tries to delete it and
+          # dies with "550 No such file or directory". A separate manifest name
+          # starts this project from a clean state.
+          state-name: .ftp-deploy-laravel.json
+          # Must stay false: local-dir holds only release.zip, so a clean slate
+          # would wipe .env, the app and public/uploads from the server.
           dangerous-clean-slate: false
