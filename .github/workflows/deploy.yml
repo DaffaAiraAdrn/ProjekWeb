@@ -8,6 +8,22 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Verify deploy target
+        env:
+          APP_DIR: ${{ secrets.FTP_APP_DIR }}
+        run: |
+          if [ -z "$APP_DIR" ]; then
+            echo "::error::FTP_APP_DIR is not set. Refusing to deploy — the old fallback was /public_html/, which is shared with other people's websites."
+            exit 1
+          fi
+          case "${APP_DIR%/}" in
+            /public_html|"")
+              echo "::error::FTP_APP_DIR points at the shared /public_html/ root. Set it to this site's own folder, e.g. /public_html/df137/."
+              exit 1
+              ;;
+          esac
+          echo "Deploy target: $APP_DIR"
+
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -44,7 +60,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./deploy/
-          server-dir: ${{ secrets.FTP_APP_DIR || '/public_html/' }}
+          server-dir: ${{ secrets.FTP_APP_DIR }}
           # The default manifest (.ftp-deploy-sync-state.json) left in
           # /public_html/ belongs to an older Next.js deploy. The action reads it,
           # sees a .next folder that is no longer there, tries to delete it and
