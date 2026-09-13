@@ -36,7 +36,7 @@
                 <div class="media-card" id="media-{{ $file->id ?? $loop->index }}">
                     <div class="media-thumb">
                         @if(str_starts_with($file->mime_type ?? $file->file_type ?? '', 'image/'))
-                            <img src="{{ asset('storage/' . ($file->path ?? $file->file_path)) }}" alt="{{ $file->name ?? $file->file_name }}">
+                            <img src="{{ asset(($file->path ?? $file->file_path)) }}" alt="{{ $file->name ?? $file->file_name }}">
                         @else
                             <i class="fas {{ getFileIcon($file->mime_type ?? $file->file_type ?? '') }}"></i>
                         @endif
@@ -49,8 +49,8 @@
                         </div>
                     </div>
                     <div style="padding:0 .75rem .75rem;display:flex;gap:.4rem;">
-                        <a href="{{ asset('storage/' . ($file->path ?? $file->file_path)) }}" target="_blank" class="btn-icon btn-sm" title="View"><i class="fas fa-eye"></i></a>
-                        <a href="{{ asset('storage/' . ($file->path ?? $file->file_path)) }}" download class="btn-icon btn-sm" title="Download"><i class="fas fa-download"></i></a>
+                        <a href="{{ asset(($file->path ?? $file->file_path)) }}" target="_blank" class="btn-icon btn-sm" title="View"><i class="fas fa-eye"></i></a>
+                        <a href="{{ asset(($file->path ?? $file->file_path)) }}" download class="btn-icon btn-sm" title="Download"><i class="fas fa-download"></i></a>
                         <form method="POST" action="{{ route('admin.media.destroy', $file->id ?? $file) }}" onsubmit="return confirm('Delete this file?');" style="display:inline;">
                             @csrf
                             @method('DELETE')

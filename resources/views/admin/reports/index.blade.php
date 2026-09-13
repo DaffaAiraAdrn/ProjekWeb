@@ -14,6 +14,21 @@
 </div>
 
 <div class="card">
+    <form method="GET" action="{{ route('admin.reports.index') }}"
+          style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+        <input type="text" name="search" class="form-control" style="flex:1;min-width:200px;"
+               value="{{ request('search') }}" placeholder="Search by title…">
+        <select name="status" class="form-control" style="max-width:180px;">
+            <option value="">All statuses</option>
+            <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft</option>
+            <option value="published" {{ request('status') === 'published' ? 'selected' : '' }}>Published</option>
+        </select>
+        <button type="submit" class="btn btn-outline"><i class="fas fa-search"></i> Filter</button>
+        @if(request()->hasAny(['search', 'status']))
+            <a href="{{ route('admin.reports.index') }}" class="btn btn-outline">Reset</a>
+        @endif
+    </form>
+
     @if(!empty($reports) && $reports->count() > 0)
         <div class="table-wrap">
             <table>
@@ -22,6 +37,8 @@
                         <th>Cover</th>
                         <th>Title</th>
                         <th>Attachments</th>
+                        <th>Status</th>
+                        <th>Published</th>
                         <th>Created</th>
                         <th>Updated</th>
                         <th style="text-align:right;">Actions</th>
@@ -32,7 +49,7 @@
                         <tr>
                             <td>
                                 @if(!empty($report->cover_image))
-                                    <img src="{{ asset('storage/' . $report->cover_image) }}" alt="{{ $report->title }}" class="table-thumb">
+                                    <img src="{{ asset($report->cover_image) }}" alt="{{ $report->title }}" class="table-thumb">
                                 @else
                                     <div class="table-thumb-placeholder"><i class="fas fa-file-alt"></i></div>
                                 @endif
@@ -47,6 +64,14 @@
                                     <span class="badge badge-gray">—</span>
                                 @endif
                             </td>
+                            <td>
+                                @if($report->status === 'published')
+                                    <span class="badge badge-green"><i class="fas fa-check-circle"></i> Published</span>
+                                @else
+                                    <span class="badge badge-yellow"><i class="fas fa-file"></i> Draft</span>
+                                @endif
+                            </td>
+                            <td>{{ $report->published_at?->format('M d, Y') ?? '—' }}</td>
                             <td>{{ $report->created_at?->format('M d, Y') }}</td>
                             <td>{{ $report->updated_at?->format('M d, Y') }}</td>
                             <td>
@@ -64,6 +89,11 @@
                 </tbody>
             </table>
         </div>
+        @if(method_exists($reports, 'links'))
+            <div style="margin-top:1.5rem;display:flex;justify-content:center;">
+                {{ $reports->links() }}
+            </div>
+        @endif
     @else
         <div class="empty-state">
             <i class="fas fa-chart-line"></i>

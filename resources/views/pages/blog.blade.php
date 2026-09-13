@@ -14,7 +14,7 @@
 <section class="blog-featured">
     <a href="{{ route('blog.show', $featuredPost->slug) }}" class="blog-featured-card reveal reveal-scale">
         @if($featuredPost->featured_image)
-            <img src="{{ asset('storage/' . $featuredPost->featured_image) }}" alt="{{ $featuredPost->title }}" loading="lazy">
+            <img src="{{ asset($featuredPost->featured_image) }}" alt="{{ $featuredPost->title }}" loading="lazy">
         @else
             <img src="https://via.placeholder.com/1600x900/2b0057/C7A6FF?text={{ urlencode($featuredPost->title) }}" alt="{{ $featuredPost->title }}" loading="lazy">
         @endif
@@ -42,7 +42,7 @@
         <a href="{{ route('blog.show', $post->slug) }}" class="blog-card reveal reveal-up">
             <div class="blog-card-image">
                 @if($post->featured_image)
-                    <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" loading="lazy">
+                    <img src="{{ asset($post->featured_image) }}" alt="{{ $post->title }}" loading="lazy">
                 @else
                     <img src="https://via.placeholder.com/600x400/1C0D2A/C7A6FF?text={{ urlencode($post->title) }}" alt="{{ $post->title }}" loading="lazy">
                 @endif

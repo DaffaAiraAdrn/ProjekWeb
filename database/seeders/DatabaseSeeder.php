@@ -16,12 +16,17 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // --- Admin ---
-        Admin::create([
-            'name' => 'Daffa Aira Adrin',
-            'email' => 'admin@df137.dev',
-            'password' => Hash::make('ChangeMe123!'),
-            'email_verified_at' => now(),
-        ]);
+        // Credentials come from ADMIN_NAME / ADMIN_EMAIL / ADMIN_PASSWORD in .env.
+        // firstOrCreate keeps this seeder safe to run more than once: re-running it
+        // no longer throws a unique violation on admins.email.
+        Admin::firstOrCreate(
+            ['email' => env('ADMIN_EMAIL', 'admin@df137.dev')],
+            [
+                'name' => env('ADMIN_NAME', 'Daffa Aira Adrin'),
+                'password' => Hash::make(env('ADMIN_PASSWORD', 'ChangeMe123!')),
+                'email_verified_at' => now(),
+            ]
+        );
 
         // --- Portfolios ---
         Portfolio::create([

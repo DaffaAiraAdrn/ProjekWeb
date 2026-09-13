@@ -60,7 +60,6 @@
                 <select name="status" id="status" class="form-control" required>
                     <option value="draft" {{ old('status') === 'draft' ? 'selected' : '' }}>Draft</option>
                     <option value="published" {{ old('status') === 'published' ? 'selected' : '' }}>Published</option>
-                    <option value="archived" {{ old('status') === 'archived' ? 'selected' : '' }}>Archived</option>
                 </select>
                 @error('status') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
             </div>

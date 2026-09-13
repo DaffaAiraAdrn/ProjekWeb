@@ -93,6 +93,21 @@
                     <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
                 </div>
             @endif
+            {{-- Without this, a failed validation just re-renders the form with
+                 no explanation, which reads as "the save button does nothing". --}}
+            @if($errors->any())
+                <div class="flash flash-error content-flash">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div>
+                        <strong>Could not save — please check the form:</strong>
+                        <ul style="margin:.4rem 0 0;padding-left:1.1rem;">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            @endif
 
             @yield('content')
         </main>

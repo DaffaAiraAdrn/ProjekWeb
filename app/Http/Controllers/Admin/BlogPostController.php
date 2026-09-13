@@ -18,7 +18,7 @@ class BlogPostController extends Controller
         }
 
         if ($request->filled('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%');
+            $query->where('title', $this->likeOperator(), '%' . $request->search . '%');
         }
 
         $posts = $query->latest()->paginate(10);
@@ -44,7 +44,7 @@ class BlogPostController extends Controller
         ]);
 
         $data = $request->only(['title', 'excerpt', 'content', 'status']);
-        $data['published_at'] = $request->filled('published_at') ? $request->published_at : null;
+        $data['published_at'] = $this->resolvePublishedAt($request);
 
         if ($request->filled('tags')) {
             $tags = array_filter(array_map('trim', explode(',', $request->tags)));
@@ -84,7 +84,7 @@ class BlogPostController extends Controller
         ]);
 
         $data = $request->only(['title', 'excerpt', 'content', 'status']);
-        $data['published_at'] = $request->filled('published_at') ? $request->published_at : null;
+        $data['published_at'] = $this->resolvePublishedAt($request, $blogPost);
 
         if ($request->filled('tags')) {
             $tags = array_filter(array_map('trim', explode(',', $request->tags)));
@@ -109,6 +109,33 @@ class BlogPostController extends Controller
 
         return redirect()->route('admin.blog.index')
             ->with('success', 'Blog post deleted successfully.');
+    }
+
+    /**
+     * A published post needs a published_at timestamp: scopePublished()
+     * filters on `published_at <= now()`, so leaving it null would keep the
+     * post invisible on the public site.
+     */
+    private function resolvePublishedAt(Request $request, ?BlogPost $post = null)
+    {
+        if ($request->filled('published_at')) {
+            return $request->published_at;
+        }
+
+        if ($request->status === 'published') {
+            return $post?->published_at ?? now();
+        }
+
+        return null;
+    }
+
+    /**
+     * PostgreSQL needs ILIKE for a case-insensitive match; MySQL's LIKE is
+     * already case-insensitive and rejects ILIKE as a syntax error.
+     */
+    private function likeOperator(): string
+    {
+        return BlogPost::query()->getConnection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
     }
 
     private function uploadFile($file, string $directory): string

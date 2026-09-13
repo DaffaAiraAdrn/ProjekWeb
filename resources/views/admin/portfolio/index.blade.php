@@ -32,7 +32,7 @@
                         <tr>
                             <td>
                                 @if(!empty($item->thumbnail))
-                                    <img src="{{ asset('storage/' . $item->thumbnail) }}" alt="{{ $item->title }}" class="table-thumb">
+                                    <img src="{{ asset($item->thumbnail) }}" alt="{{ $item->title }}" class="table-thumb">
                                 @else
                                     <div class="table-thumb-placeholder"><i class="fas fa-image"></i></div>
                                 @endif
@@ -65,6 +65,11 @@
                 </tbody>
             </table>
         </div>
+        @if(method_exists($portfolios, 'links'))
+            <div style="margin-top:1.5rem;display:flex;justify-content:center;">
+                {{ $portfolios->links() }}
+            </div>
+        @endif
     @else
         <div class="empty-state">
             <i class="fas fa-briefcase"></i>

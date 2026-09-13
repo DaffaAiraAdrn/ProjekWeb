@@ -25,10 +25,10 @@
                         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                         {{ $report->created_at ? $report->created_at->format('M d, Y') : 'N/A' }}
                     </span>
-                    @if($report->author)
+                    @if($settings['owner_name'] ?? null)
                         <span>
                             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                            {{ $report->author }}
+                            {{ $settings['owner_name'] }}
                         </span>
                     @endif
                     @if($report->pages)
@@ -40,8 +40,8 @@
                 </div>
                 <div class="report-card-actions">
                     <a href="{{ route('reports.show', $report->slug) }}" class="report-view-btn">Read Report</a>
-                    @if($report->file_path)
-                        <a href="{{ asset('storage/' . $report->file_path) }}" download class="report-download-btn">
+                    @if(!empty($report->attachments))
+                        <a href="{{ asset($report->attachments[0]) }}" download class="report-download-btn">
                             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                             Download
                         </a>

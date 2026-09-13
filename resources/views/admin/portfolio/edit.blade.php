@@ -63,7 +63,7 @@
             @if(!empty($item->thumbnail))
                 <div class="preview-grid" style="display:grid;">
                     <div class="preview-item">
-                        <img src="{{ asset('storage/' . $item->thumbnail) }}" alt="Thumbnail">
+                        <img src="{{ asset($item->thumbnail) }}" alt="Thumbnail">
                     </div>
                 </div>
             @else
@@ -84,15 +84,19 @@
 
         <div class="form-group">
             <label class="form-label">Current Images</label>
-            @if(!empty($item->images) && count($item->images) > 0)
+            @if(!empty($item->images))
                 <div class="preview-grid" style="display:grid;">
                     @foreach($item->images as $image)
-                        <div class="preview-item" id="existing-img-{{ $image->id ?? $loop->index }}">
-                            <img src="{{ asset('storage/' . ($image->path ?? $image)) }}" alt="Project image">
-                            <button type="button" class="preview-remove" onclick="deleteImage({{ $image->id ?? 'null' }}, this)" style="background:rgba(220,38,38,0.8);"><i class="fas fa-times"></i></button>
+                        <div class="preview-item">
+                            <img src="{{ asset($image) }}" alt="Project image">
+                            <label class="preview-remove" title="Tick to remove this image when you save"
+                                   style="background:rgba(220,38,38,0.8);cursor:pointer;">
+                                <input type="checkbox" name="remove_images[]" value="{{ $image }}">
+                            </label>
                         </div>
                     @endforeach
                 </div>
+                <div class="form-help">Ticked images are deleted when you save.</div>
             @else
                 <p class="form-help">No additional images uploaded.</p>
             @endif
@@ -164,16 +168,6 @@
             reader.readAsDataURL(file);
         });
         preview.style.display = 'grid';
-    }
-
-    function deleteImage(id, btn) {
-        if (!confirm('Delete this image?')) return;
-        if (id) {
-            fetch('{{ url("/admin/portfolio/images") }}/' + id, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } })
-                .then(function() { btn.parentElement.remove(); });
-        } else {
-            btn.parentElement.remove();
-        }
     }
 </script>
 @endpush

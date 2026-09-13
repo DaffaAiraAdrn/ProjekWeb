@@ -42,7 +42,7 @@
             @if(!empty($post->featured_image))
                 <div class="preview-grid" style="display:grid;">
                     <div class="preview-item">
-                        <img src="{{ asset('storage/' . $post->featured_image) }}" alt="Featured image">
+                        <img src="{{ asset($post->featured_image) }}" alt="Featured image">
                     </div>
                 </div>
             @else
@@ -64,7 +64,7 @@
         <div class="form-row">
             <div class="form-group">
                 <label class="form-label" for="tags">Tags</label>
-                <input type="text" name="tags" id="tags" class="form-control" value="{{ old('tags', $post->tags) }}" placeholder="comma, separated, tags">
+                <input type="text" name="tags" id="tags" class="form-control" value="{{ old('tags', is_array($post->tags) ? implode(', ', $post->tags) : $post->tags) }}" placeholder="comma, separated, tags">
                 <div class="form-help">Separate tags with commas.</div>
                 @error('tags') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
             </div>
@@ -74,7 +74,6 @@
                 <select name="status" id="status" class="form-control" required>
                     <option value="draft" {{ old('status', $post->status) === 'draft' ? 'selected' : '' }}>Draft</option>
                     <option value="published" {{ old('status', $post->status) === 'published' ? 'selected' : '' }}>Published</option>
-                    <option value="archived" {{ old('status', $post->status) === 'archived' ? 'selected' : '' }}>Archived</option>
                 </select>
                 @error('status') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
             </div>

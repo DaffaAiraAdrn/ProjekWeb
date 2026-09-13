@@ -16,7 +16,7 @@
 
 <div class="card" style="margin-bottom:1.5rem;">
     @if(!empty($item->thumbnail))
-        <img src="{{ asset('storage/' . $item->thumbnail) }}" alt="{{ $item->title }}" style="width:100%;max-height:400px;object-fit:cover;border-radius:12px;margin-bottom:1.5rem;">
+        <img src="{{ asset($item->thumbnail) }}" alt="{{ $item->title }}" style="width:100%;max-height:400px;object-fit:cover;border-radius:12px;margin-bottom:1.5rem;">
     @endif
 
     <div class="detail-row">
@@ -62,7 +62,7 @@
         <div class="preview-grid" style="display:grid;">
             @foreach($item->images as $image)
                 <div class="preview-item">
-                    <img src="{{ asset('storage/' . ($image->path ?? $image)) }}" alt="Project image {{ $loop->index + 1 }}">
+                    <img src="{{ asset(($image->path ?? $image)) }}" alt="Project image {{ $loop->index + 1 }}">
                 </div>
             @endforeach
         </div>

@@ -18,7 +18,7 @@ class PortfolioController extends Controller
         }
 
         if ($request->filled('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%');
+            $query->where('title', $this->likeOperator(), '%' . $request->search . '%');
         }
 
         $portfolios = $query->orderBy('order')->latest()->paginate(10);
@@ -87,6 +87,8 @@ class PortfolioController extends Controller
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
             'featured' => 'boolean',
             'order' => 'integer|min:0',
+            'remove_images' => 'nullable|array',
+            'remove_images.*' => 'string',
         ]);
 
         $data = $request->only(['title', 'category', 'description', 'content', 'order']);
@@ -98,13 +100,25 @@ class PortfolioController extends Controller
             $data['thumbnail'] = $this->uploadFile($request->file('thumbnail'), 'portfolios/thumbnails');
         }
 
+        // Start from the images the admin did not tick for removal, then append
+        // whatever was just uploaded.
+        $images = $portfolio->images ?? [];
+        $removed = $request->input('remove_images', []);
+
+        if (!empty($removed)) {
+            foreach ($removed as $path) {
+                $this->deleteFile($path);
+            }
+            $images = array_values(array_diff($images, $removed));
+        }
+
         if ($request->hasFile('images')) {
-            $images = $portfolio->images ?? [];
             foreach ($request->file('images') as $image) {
                 $images[] = $this->uploadFile($image, 'portfolios/images');
             }
-            $data['images'] = $images;
         }
+
+        $data['images'] = $images;
 
         $portfolio->update($data);
 
@@ -126,6 +140,15 @@ class PortfolioController extends Controller
 
         return redirect()->route('admin.portfolio.index')
             ->with('success', 'Portfolio item deleted successfully.');
+    }
+
+    /**
+     * PostgreSQL needs ILIKE for a case-insensitive match; MySQL's LIKE is
+     * already case-insensitive and rejects ILIKE as a syntax error.
+     */
+    private function likeOperator(): string
+    {
+        return Portfolio::query()->getConnection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
     }
 
     private function uploadFile($file, string $directory): string

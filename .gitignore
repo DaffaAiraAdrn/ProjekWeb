@@ -17,3 +17,13 @@ storage/logs/laravel.log
 public/storage
 public/uploads/*
 !public/uploads/.gitkeep
+
+# Credential dumps and diagnostic scripts that must never reach the repo
+# or the server. .env.backup above does not match .env-backup (hyphen).
+.env-backup
+public/.env-backup
+/laravel.log
+public/dbcheck.php
+public/debug.php
+public/migrate.php
+public/PageController.php

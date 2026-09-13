@@ -32,7 +32,7 @@
                         <tr>
                             <td>
                                 @if(!empty($post->featured_image))
-                                    <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" class="table-thumb">
+                                    <img src="{{ asset($post->featured_image) }}" alt="{{ $post->title }}" class="table-thumb">
                                 @else
                                     <div class="table-thumb-placeholder"><i class="fas fa-newspaper"></i></div>
                                 @endif
@@ -42,7 +42,7 @@
                             </td>
                             <td>
                                 @if(!empty($post->tags))
-                                    @foreach(explode(',', $post->tags) as $tag)
+                                    @foreach(is_array($post->tags) ? $post->tags : explode(',', $post->tags) as $tag)
                                         <span class="badge badge-purple" style="margin-right:.25rem;margin-bottom:.25rem;">{{ trim($tag) }}</span>
                                     @endforeach
                                 @else
@@ -74,6 +74,11 @@
                 </tbody>
             </table>
         </div>
+        @if(method_exists($posts, 'links'))
+            <div style="margin-top:1.5rem;display:flex;justify-content:center;">
+                {{ $posts->links() }}
+            </div>
+        @endif
     @else
         <div class="empty-state">
             <i class="fas fa-blog"></i>

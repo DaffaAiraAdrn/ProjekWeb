@@ -44,6 +44,13 @@ Options -Indexes
     Require all denied
 </FilesMatch>
 
+# Block the standalone diagnostic scripts. dbcheck.php prints the database
+# host, port, name and user to anyone who requests it; the others are leftover
+# scaffolding. Delete them from the server as well — this is only a backstop.
+<FilesMatch "^(dbcheck|debug|PageController)\.php$">
+    Require all denied
+</FilesMatch>
+
 # Enable compression
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/json image/svg+xml

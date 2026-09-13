@@ -18,10 +18,10 @@ class ReportController extends Controller
         }
 
         if ($request->filled('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%');
+            $query->where('title', $this->likeOperator(), '%' . $request->search . '%');
         }
 
-        $reports = $query->latest()->paginate(10);
+        $reports = $query->latest()->paginate(10)->withQueryString();
 
         return view('admin.reports.index', compact('reports'));
     }
@@ -33,25 +33,13 @@ class ReportController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'abstract' => 'nullable|string',
-            'introduction' => 'nullable|string',
-            'methodology' => 'nullable|string',
-            'results' => 'nullable|string',
-            'conclusion' => 'nullable|string',
-            'references' => 'nullable|string',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
-            'attachments.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,zip|max:10240',
-            'status' => 'required|in:draft,published',
-            'published_at' => 'nullable|date',
-        ]);
+        $request->validate($this->rules());
 
         $data = $request->only([
             'title', 'abstract', 'introduction', 'methodology',
             'results', 'conclusion', 'references', 'status'
         ]);
-        $data['published_at'] = $request->filled('published_at') ? $request->published_at : null;
+        $data['published_at'] = $this->resolvePublishedAt($request);
 
         if ($request->hasFile('cover_image')) {
             $data['cover_image'] = $this->uploadFile($request->file('cover_image'), 'reports/covers');
@@ -83,38 +71,38 @@ class ReportController extends Controller
 
     public function update(Request $request, Report $report)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'abstract' => 'nullable|string',
-            'introduction' => 'nullable|string',
-            'methodology' => 'nullable|string',
-            'results' => 'nullable|string',
-            'conclusion' => 'nullable|string',
-            'references' => 'nullable|string',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
-            'attachments.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,zip|max:10240',
-            'status' => 'required|in:draft,published',
-            'published_at' => 'nullable|date',
-        ]);
+        $request->validate($this->rules());
 
         $data = $request->only([
             'title', 'abstract', 'introduction', 'methodology',
             'results', 'conclusion', 'references', 'status'
         ]);
-        $data['published_at'] = $request->filled('published_at') ? $request->published_at : null;
+        $data['published_at'] = $this->resolvePublishedAt($request, $report);
 
         if ($request->hasFile('cover_image')) {
             $this->deleteFile($report->cover_image);
             $data['cover_image'] = $this->uploadFile($request->file('cover_image'), 'reports/covers');
         }
 
+        // Start from the attachments the admin did not tick for removal, then
+        // append whatever was just uploaded.
+        $attachments = $report->attachments ?? [];
+        $removed = $request->input('remove_attachments', []);
+
+        if (!empty($removed)) {
+            foreach ($removed as $path) {
+                $this->deleteFile($path);
+            }
+            $attachments = array_values(array_diff($attachments, $removed));
+        }
+
         if ($request->hasFile('attachments')) {
-            $attachments = $report->attachments ?? [];
             foreach ($request->file('attachments') as $attachment) {
                 $attachments[] = $this->uploadFile($attachment, 'reports/attachments');
             }
-            $data['attachments'] = $attachments;
         }
+
+        $data['attachments'] = $attachments;
 
         $report->update($data);
 
@@ -126,16 +114,66 @@ class ReportController extends Controller
     {
         $this->deleteFile($report->cover_image);
 
-        if ($report->attachments) {
-            foreach ($report->attachments as $attachment) {
-                $this->deleteFile($attachment);
-            }
+        foreach ($report->attachments ?? [] as $attachment) {
+            $this->deleteFile($attachment);
         }
 
         $report->delete();
 
         return redirect()->route('admin.reports.index')
             ->with('success', 'Report deleted successfully.');
+    }
+
+    /**
+     * Validation rules shared by store() and update().
+     *
+     * The attachment mime list mirrors the `accept` attribute on the upload
+     * field in the create/edit forms — images are allowed there too.
+     */
+    private function rules(): array
+    {
+        return [
+            'title' => 'required|string|max:255',
+            'abstract' => 'nullable|string',
+            'introduction' => 'nullable|string',
+            'methodology' => 'nullable|string',
+            'results' => 'nullable|string',
+            'conclusion' => 'nullable|string',
+            'references' => 'nullable|string',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+            'attachments.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,zip,png,jpg,jpeg|max:10240',
+            'remove_attachments' => 'nullable|array',
+            'remove_attachments.*' => 'string',
+            'status' => 'required|in:draft,published',
+            'published_at' => 'nullable|date',
+        ];
+    }
+
+    /**
+     * A published report needs a published_at timestamp: scopePublished()
+     * filters on `published_at <= now()`, so leaving it null would keep the
+     * report invisible on the public site.
+     */
+    private function resolvePublishedAt(Request $request, ?Report $report = null)
+    {
+        if ($request->filled('published_at')) {
+            return $request->published_at;
+        }
+
+        if ($request->status === 'published') {
+            return $report?->published_at ?? now();
+        }
+
+        return null;
+    }
+
+    /**
+     * PostgreSQL needs ILIKE for a case-insensitive match; MySQL's LIKE is
+     * already case-insensitive and rejects ILIKE as a syntax error.
+     */
+    private function likeOperator(): string
+    {
+        return Report::query()->getConnection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
     }
 
     private function uploadFile($file, string $directory): string

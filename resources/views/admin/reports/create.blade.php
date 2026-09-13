@@ -24,7 +24,7 @@
         </div>
 
         <div class="form-group">
-            <label class="form-label">Abstract <span class="req">*</span></label>
+            <label class="form-label">Abstract</label>
             <div id="editor-abstract"></div>
             <input type="hidden" name="abstract" id="abstract-input" value="{{ old('abstract') }}">
             @error('abstract') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
@@ -87,6 +87,22 @@
             @error('attachments') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
         </div>
 
+        <div class="form-group">
+            <label class="form-label" for="status">Status <span class="req">*</span></label>
+            <select name="status" id="status" class="form-control" required>
+                <option value="draft" {{ old('status', 'draft') === 'draft' ? 'selected' : '' }}>Draft</option>
+                <option value="published" {{ old('status') === 'published' ? 'selected' : '' }}>Published</option>
+            </select>
+            @error('status') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="published_at">Publish Date</label>
+            <input type="datetime-local" name="published_at" id="published_at" class="form-control" value="{{ old('published_at') }}">
+            <div class="form-help">Leave empty to publish immediately when status is "Published".</div>
+            @error('published_at') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
+        </div>
+
         <div style="display:flex;gap:.75rem;">
             <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create Report</button>
             <a href="{{ route('admin.reports.index') }}" class="btn btn-outline">Cancel</a>
@@ -96,6 +112,7 @@
 
 @push('scripts')
 <script>
+    var editors = [];
     function initEditor(selector, inputId) {
         var quill = new Quill(selector, {
             theme: 'snow',
@@ -104,6 +121,7 @@
         var input = document.getElementById(inputId);
         if (input.value) quill.root.innerHTML = input.value;
         quill.on('text-change', function() { input.value = quill.root.innerHTML; });
+        editors.push({ quill: quill, input: input });
         return quill;
     }
     initEditor('#editor-abstract', 'abstract-input');
@@ -112,6 +130,15 @@
     initEditor('#editor-results', 'results-input');
     initEditor('#editor-conclusion', 'conclusion-input');
     initEditor('#editor-references', 'references-input');
+    // Flush every editor into its hidden input on submit. An untouched Quill
+    // never fires text-change, and an emptied one still holds "<p><br></p>",
+    // which would be stored as content instead of null.
+    document.querySelector('.card form').addEventListener('submit', function() {
+        editors.forEach(function(e) {
+            e.input.value = e.quill.getLength() > 1 ? e.quill.root.innerHTML : '';
+        });
+    });
+
 
     function previewSingle(input, previewId) {
         var preview = document.getElementById(previewId);

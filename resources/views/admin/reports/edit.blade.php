@@ -25,7 +25,7 @@
         </div>
 
         <div class="form-group">
-            <label class="form-label">Abstract <span class="req">*</span></label>
+            <label class="form-label">Abstract</label>
             <div id="editor-abstract"></div>
             <input type="hidden" name="abstract" id="abstract-input" value="{{ old('abstract', $report->abstract) }}">
             @error('abstract') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
@@ -71,7 +71,7 @@
             @if(!empty($report->cover_image))
                 <div class="preview-grid" style="display:grid;">
                     <div class="preview-item">
-                        <img src="{{ asset('storage/' . $report->cover_image) }}" alt="Cover image">
+                        <img src="{{ asset($report->cover_image) }}" alt="Cover image">
                     </div>
                 </div>
             @else
@@ -92,21 +92,35 @@
 
         <div class="form-group">
             <label class="form-label">Current Attachments</label>
-            @if(!empty($report->attachments) && count($report->attachments) > 0)
-                @foreach($report->attachments as $attachment)
-                    <div class="preview-file" id="att-{{ $attachment->id ?? $loop->index }}">
-                        <i class="fas {{ getAttachmentIcon($attachment->file_type ?? 'file') }}"></i>
-                        <div class="file-info">
-                            <div class="file-name">{{ $attachment->file_name ?? $attachment->name ?? 'Attachment' }}</div>
-                            <div class="file-size">{{ $attachment->file_size ?? '' }}</div>
-                        </div>
-                        <a href="{{ asset('storage/' . ($attachment->path ?? $attachment)) }}" download class="btn-icon" title="Download"><i class="fas fa-download"></i></a>
-                        <button type="button" class="btn-icon danger" onclick="deleteAttachment({{ $attachment->id ?? 'null' }}, this)" title="Delete"><i class="fas fa-trash"></i></button>
+            @forelse($report->attachments ?? [] as $attachment)
+                @php
+                    $ext = strtolower(pathinfo($attachment, PATHINFO_EXTENSION));
+                    $icon = match ($ext) {
+                        'pdf' => 'fa-file-pdf',
+                        'doc', 'docx' => 'fa-file-word',
+                        'xls', 'xlsx' => 'fa-file-excel',
+                        'ppt', 'pptx' => 'fa-file-powerpoint',
+                        'zip' => 'fa-file-archive',
+                        'png', 'jpg', 'jpeg' => 'fa-file-image',
+                        default => 'fa-file',
+                    };
+                @endphp
+                <div class="preview-file">
+                    <i class="fas {{ $icon }}"></i>
+                    <div class="file-info">
+                        <div class="file-name">{{ basename($attachment) }}</div>
+                        <div class="file-size">{{ strtoupper($ext) }}</div>
                     </div>
-                @endforeach
-            @else
+                    <a href="{{ asset($attachment) }}" download class="btn-icon" title="Download"><i class="fas fa-download"></i></a>
+                    <label class="btn-icon danger" title="Tick to remove this file when you save" style="cursor:pointer;">
+                        <input type="checkbox" name="remove_attachments[]" value="{{ $attachment }}">
+                        <i class="fas fa-trash"></i>
+                    </label>
+                </div>
+            @empty
                 <p class="form-help">No attachments uploaded.</p>
-            @endif
+            @endforelse
+            <div class="form-help">Ticked files are deleted when you save.</div>
         </div>
 
         <div class="form-group">
@@ -120,6 +134,23 @@
             @error('attachments') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
         </div>
 
+        <div class="form-group">
+            <label class="form-label" for="status">Status <span class="req">*</span></label>
+            <select name="status" id="status" class="form-control" required>
+                <option value="draft" {{ old('status', $report->status) === 'draft' ? 'selected' : '' }}>Draft</option>
+                <option value="published" {{ old('status', $report->status) === 'published' ? 'selected' : '' }}>Published</option>
+            </select>
+            @error('status') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="published_at">Publish Date</label>
+            <input type="datetime-local" name="published_at" id="published_at" class="form-control"
+                   value="{{ old('published_at', $report->published_at?->format('Y-m-d\TH:i')) }}">
+            <div class="form-help">Leave empty to publish immediately when status is "Published".</div>
+            @error('published_at') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
+        </div>
+
         <div style="display:flex;gap:.75rem;">
             <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
             <a href="{{ route('admin.reports.index') }}" class="btn btn-outline">Cancel</a>
@@ -129,6 +160,7 @@
 
 @push('scripts')
 <script>
+    var editors = [];
     function initEditor(selector, inputId) {
         var quill = new Quill(selector, {
             theme: 'snow',
@@ -137,6 +169,7 @@
         var input = document.getElementById(inputId);
         if (input.value) quill.root.innerHTML = input.value;
         quill.on('text-change', function() { input.value = quill.root.innerHTML; });
+        editors.push({ quill: quill, input: input });
         return quill;
     }
     initEditor('#editor-abstract', 'abstract-input');
@@ -145,6 +178,15 @@
     initEditor('#editor-results', 'results-input');
     initEditor('#editor-conclusion', 'conclusion-input');
     initEditor('#editor-references', 'references-input');
+    // Flush every editor into its hidden input on submit. An untouched Quill
+    // never fires text-change, and an emptied one still holds "<p><br></p>",
+    // which would be stored as content instead of null.
+    document.querySelector('.card form').addEventListener('submit', function() {
+        editors.forEach(function(e) {
+            e.input.value = e.quill.getLength() > 1 ? e.quill.root.innerHTML : '';
+        });
+    });
+
 
     function previewSingle(input, previewId) {
         var preview = document.getElementById(previewId);
@@ -180,26 +222,6 @@
         if (bytes < 1048576) return (bytes/1024).toFixed(1) + ' KB';
         return (bytes/1048576).toFixed(1) + ' MB';
     }
-
-    function deleteAttachment(id, btn) {
-        if (!confirm('Delete this attachment?')) return;
-        if (id) {
-            fetch('{{ url("/admin/reports/attachments") }}/' + id, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } })
-                .then(function() { btn.parentElement.remove(); });
-        } else {
-            btn.parentElement.remove();
-        }
-    }
 </script>
 @endpush
-
-@php
-    function getAttachmentIcon($type) {
-        $type = strtolower($type);
-        if (str_contains($type, 'pdf')) return 'fa-file-pdf';
-        if (str_contains($type, 'doc') || str_contains($type, 'word')) return 'fa-file-word';
-        if (str_contains($type, 'png') || str_contains($type, 'jpg') || str_contains($type, 'jpeg') || str_contains($type, 'image')) return 'fa-file-image';
-        return 'fa-file';
-    }
-@endphp
 @endsection

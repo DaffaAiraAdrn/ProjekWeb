@@ -4,7 +4,7 @@ use Illuminate\Support\InteractsWithTime;
 
 return [
 
-    'store' => env('CACHE_STORE', 'file'),
+    'default' => env('CACHE_STORE', 'file'),
 
     'stores' => [
 

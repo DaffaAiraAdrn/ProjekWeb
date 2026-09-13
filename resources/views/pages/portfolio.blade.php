@@ -23,8 +23,8 @@
             <a href="{{ route('portfolio.show', $portfolio->slug) }}" class="portfolio-card tilt-card reveal reveal-up" data-category="{{ strtolower($portfolio->category) }}">
                 <div class="tilt-card-shine"></div>
                 <div class="portfolio-card-image">
-                    @if($portfolio->featured_image)
-                        <img src="{{ asset('storage/' . $portfolio->featured_image) }}" alt="{{ $portfolio->title }}" loading="lazy">
+                    @if($portfolio->thumbnail)
+                        <img src="{{ asset($portfolio->thumbnail) }}" alt="{{ $portfolio->title }}" loading="lazy">
                     @else
                         <img src="https://via.placeholder.com/600x400/1C0D2A/C7A6FF?text={{ urlencode($portfolio->title) }}" alt="{{ $portfolio->title }}" loading="lazy">
                     @endif
@@ -35,7 +35,7 @@
                 <div class="portfolio-card-body tilt-card-inner">
                     <span class="portfolio-card-category">{{ strtoupper($portfolio->category) }}</span>
                     <h3 class="portfolio-card-title">{{ $portfolio->title }}</h3>
-                    <p class="portfolio-card-desc">{{ $portfolio->excerpt }}</p>
+                    <p class="portfolio-card-desc">{{ $portfolio->description }}</p>
                     @if($portfolio->tags)
                         <div class="portfolio-card-tags">
                             @foreach(explode(',', $portfolio->tags) as $tag)

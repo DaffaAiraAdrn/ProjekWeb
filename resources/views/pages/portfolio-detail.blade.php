@@ -6,15 +6,15 @@
 
 {{-- Hero with Parallax --}}
 <section class="portfolio-detail-hero" id="detailHero">
-    @if($portfolio->featured_image)
-        <img src="{{ asset('storage/' . $portfolio->featured_image) }}" alt="{{ $portfolio->title }}" id="parallaxImg" onerror="this.style.display='none'">
+    @if($portfolio->thumbnail)
+        <img src="{{ asset($portfolio->thumbnail) }}" alt="{{ $portfolio->title }}" id="parallaxImg" onerror="this.style.display='none'">
     @else
         <img src="https://via.placeholder.com/1920x1080/2b0057/C7A6FF?text={{ urlencode($portfolio->title) }}" alt="{{ $portfolio->title }}" id="parallaxImg" onerror="this.style.display='none'">
     @endif
     <div class="portfolio-detail-hero-content reveal reveal-up">
         <span class="section-label">{{ strtoupper($portfolio->category) }}</span>
         <h1 class="section-title gradient-text" style="margin-bottom:16px;">{{ $portfolio->title }}</h1>
-        <p class="section-subtitle">{{ $portfolio->excerpt }}</p>
+        <p class="section-subtitle">{{ $portfolio->description }}</p>
     </div>
 </section>
 
@@ -23,12 +23,12 @@
     <div class="portfolio-detail-content reveal reveal-up">
         {!! $portfolio->content !!}
 
-        @if($portfolio->gallery_images)
+        @if(!empty($portfolio->images))
             <h3>Gallery</h3>
             <div class="gallery-grid" id="galleryGrid">
-                @foreach(json_decode($portfolio->gallery_images, true) ?? [] as $image)
+                @foreach($portfolio->images as $image)
                     <div class="gallery-item" data-lightbox>
-                        <img src="{{ asset('storage/' . $image) }}" alt="{{ $portfolio->title }}" loading="lazy">
+                        <img src="{{ asset($image) }}" alt="{{ $portfolio->title }}" loading="lazy">
                     </div>
                 @endforeach
             </div>

@@ -48,11 +48,11 @@
 
             <div class="form-group">
                 <label for="name">Your Name</label>
-                <input type="text" id="name" name="name" class="form-input" placeholder="John Doe" required>
+                <input type="text" id="name" name="name" class="form-input" placeholder="Your Name" required>
             </div>
             <div class="form-group">
                 <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" class="form-input" placeholder="john@example.com" required>
+                <input type="email" id="email" name="email" class="form-input" placeholder="youremail@example.com" required>
             </div>
             <div class="form-group">
                 <label for="subject">Subject</label>
